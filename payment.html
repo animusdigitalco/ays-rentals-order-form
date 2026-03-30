@@ -451,6 +451,11 @@ function renderPage() {
   const delivery = orderData.totals.deliveryFee && orderData.totals.deliveryFee !== '0' ? orderData.totals.deliveryFee : null;
   const discount = orderData.totals.discount && orderData.totals.discount !== '0' ? orderData.totals.discount : null;
   const grandTotal = orderData.totals.grandTotal;
+  const grandTotalNum = parseFloat(grandTotal.replace(/[^0-9.]/g, '')) || 0;
+  const isConstruction = orderData.market === 'construction';
+  const depositAmount = (grandTotalNum * 0.5).toFixed(2);
+  const billingLabel = isConstruction ? 'Per 28-Day Cycle' : 'Event Total';
+  const depositLabel = isConstruction ? '50% Deposit Due Now' : '50% Deposit Due Now';
 
   container.innerHTML = `
     <!-- ORDER SUMMARY (left) -->
@@ -470,8 +475,18 @@ function renderPage() {
         ${delivery ? `<div class="summary-subtotal"><span>Delivery</span><span>$${parseFloat(delivery).toFixed(2)}</span></div>` : ''}
         ${discount ? `<div class="summary-subtotal"><span>Discount (${discount}%)</span><span>-</span></div>` : ''}
         <div class="summary-total">
-          <span>Total Due</span>
+          <span>${billingLabel}</span>
           <span>${grandTotal}</span>
+        </div>
+        ${isConstruction ? `
+        <div style="margin-top:12px;padding:12px 16px;background:#e8f4fd;border-radius:8px;font-size:13px;color:var(--primary);line-height:1.6;">
+          <strong>28-Day Billing Cycle</strong><br>
+          Prices shown are per 28-day cycle. Service begins on delivery date and renews every 28 days until pickup is requested.
+        </div>
+        ` : ''}
+        <div style="margin-top:12px;padding:14px 16px;background:#f0faf2;border-radius:8px;font-size:14px;font-weight:600;color:#2d7a3e;display:flex;justify-content:space-between;align-items:center;">
+          <span>${depositLabel}</span>
+          <span style="font-size:18px;">$${depositAmount}</span>
         </div>
       </div>
 
@@ -538,12 +553,12 @@ function renderPage() {
         </div>
 
         <button type="submit" class="pay-btn" id="payBtn">
-          Pay ${grandTotal}
+          Pay $${depositAmount} Deposit
         </button>
 
         <div class="fine-print">
-          A 50% deposit is required before unit deployment.<br>
-          A final invoice will be sent upon pickup.
+          50% deposit ($${depositAmount}) charged now before unit deployment.<br>
+          ${isConstruction ? 'Remaining balance billed per 28-day cycle. ' : ''}Final invoice sent upon pickup.
         </div>
       </form>
 
