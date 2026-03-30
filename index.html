@@ -14,6 +14,7 @@
   --bg: #f5f6fa;
   --white: #ffffff;
   --gray: #6b7280;
+  --green: #059669;
   --radius: 12px;
   --shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
@@ -26,27 +27,17 @@ body {
   min-height: 100vh;
 }
 
-/* HEADER */
 .header {
   background: var(--primary);
   color: var(--white);
   padding: 20px 24px;
   text-align: center;
 }
-.header h1 {
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: 1px;
-}
-.header p {
-  font-size: 14px;
-  opacity: 0.7;
-  margin-top: 4px;
-}
+.header h1 { font-size: 24px; font-weight: 700; letter-spacing: 1px; }
+.header p { font-size: 14px; opacity: 0.7; margin-top: 4px; }
 
-/* FORM CONTAINER */
 .form-container {
-  max-width: 720px;
+  max-width: 800px;
   margin: 32px auto;
   padding: 0 20px;
 }
@@ -58,7 +49,6 @@ body {
   padding: 32px;
   margin-bottom: 24px;
 }
-
 .form-card h2 {
   font-size: 18px;
   font-weight: 600;
@@ -67,7 +57,6 @@ body {
   border-bottom: 2px solid var(--bg);
 }
 
-/* FORM FIELDS */
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -75,12 +64,9 @@ body {
   margin-bottom: 16px;
 }
 .form-row.full { grid-template-columns: 1fr; }
+.form-row.three { grid-template-columns: 1fr 1fr 1fr; }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
+.form-group { display: flex; flex-direction: column; }
 .form-group label {
   font-size: 13px;
   font-weight: 600;
@@ -89,7 +75,6 @@ body {
   letter-spacing: 0.5px;
   margin-bottom: 6px;
 }
-
 .form-group input,
 .form-group select,
 .form-group textarea {
@@ -105,45 +90,97 @@ body {
 }
 .form-group input:focus,
 .form-group select:focus,
-.form-group textarea:focus {
-  border-color: var(--accent);
-}
+.form-group textarea:focus { border-color: var(--accent); }
 .form-group textarea { resize: vertical; min-height: 80px; }
 
-/* RENTAL ITEMS TABLE */
-.items-table {
+/* MARKET TYPE TOGGLE */
+.market-toggle {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.market-btn {
+  flex: 1;
+  padding: 14px 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  background: var(--white);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+.market-btn:hover { border-color: var(--blue); }
+.market-btn.active {
+  border-color: var(--blue);
+  background: var(--blue);
+  color: var(--white);
+}
+.market-btn small {
+  display: block;
+  font-weight: 400;
+  font-size: 12px;
+  opacity: 0.7;
+  margin-top: 2px;
+}
+
+/* SAME AS ABOVE TOGGLE */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.toggle-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--blue);
+}
+
+/* EQUIPMENT TABLE */
+.eq-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 12px;
+  font-size: 14px;
 }
-.items-table th {
-  font-size: 12px;
+.eq-table th {
+  font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--gray);
   text-align: left;
-  padding: 8px 10px;
+  padding: 8px 6px;
   border-bottom: 2px solid var(--bg);
+  white-space: nowrap;
 }
-.items-table td {
-  padding: 8px 10px;
+.eq-table td {
+  padding: 6px;
   border-bottom: 1px solid #f0f0f0;
   vertical-align: middle;
 }
-.items-table input,
-.items-table select {
+.eq-table select,
+.eq-table input {
   width: 100%;
-  padding: 8px 10px;
+  padding: 8px 8px;
   border: 1.5px solid #e0e0e0;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 13px;
   font-family: inherit;
   outline: none;
 }
-.items-table input:focus,
-.items-table select:focus {
-  border-color: var(--accent);
+.eq-table select:focus,
+.eq-table input:focus { border-color: var(--accent); }
+
+.eq-table .row-total {
+  font-weight: 700;
+  text-align: right;
+  white-space: nowrap;
+  min-width: 80px;
 }
 
 .add-item-btn {
@@ -161,10 +198,7 @@ body {
   cursor: pointer;
   transition: all 0.2s;
 }
-.add-item-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
+.add-item-btn:hover { border-color: var(--accent); color: var(--accent); }
 
 .remove-btn {
   background: none;
@@ -174,7 +208,6 @@ body {
   cursor: pointer;
   padding: 4px 8px;
   border-radius: 4px;
-  transition: color 0.2s;
 }
 .remove-btn:hover { color: var(--accent); }
 
@@ -186,22 +219,45 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 8px;
+  gap: 6px;
 }
 .total-row {
   display: flex;
   justify-content: space-between;
-  width: 260px;
+  width: 280px;
   font-size: 15px;
+  padding: 4px 0;
 }
 .total-row.grand {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
-  padding-top: 8px;
+  padding-top: 10px;
+  margin-top: 4px;
   border-top: 2px solid var(--primary);
+  color: var(--blue);
 }
+.total-row .discount-input {
+  width: 60px;
+  padding: 4px 8px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14px;
+  text-align: center;
+  outline: none;
+}
+.total-row .discount-input:focus { border-color: var(--accent); }
 
-/* SUBMIT */
+/* FINE PRINT */
+.fine-print {
+  font-size: 12px;
+  color: var(--gray);
+  line-height: 1.7;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+}
+.fine-print p { margin-bottom: 6px; }
+
 .submit-btn {
   display: block;
   width: 100%;
@@ -229,13 +285,49 @@ body {
   color: var(--gray);
 }
 
-/* RESPONSIVE */
 @media (max-width: 600px) {
-  .form-row { grid-template-columns: 1fr; }
+  .form-row, .form-row.three { grid-template-columns: 1fr; }
   .form-card { padding: 20px; }
-  .items-table { font-size: 13px; }
   .total-row { width: 100%; }
   .totals-section { align-items: stretch; }
+  .market-toggle { flex-direction: column; }
+
+  /* Stack equipment rows as cards on mobile */
+  .eq-table thead { display: none; }
+  .eq-table, .eq-table tbody, .eq-table tr, .eq-table td {
+    display: block;
+    width: 100%;
+  }
+  .eq-row {
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .eq-row td {
+    padding: 4px 0;
+    border: none;
+    text-align: left !important;
+  }
+  .eq-row td:before {
+    content: attr(data-label);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--gray);
+    letter-spacing: 0.3px;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .eq-row td select, .eq-row td input { width: 100%; }
+  .eq-row td:last-child {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: auto;
+  }
+  .eq-row .row-total { font-size: 16px; }
 }
 </style>
 </head>
@@ -243,179 +335,456 @@ body {
 
 <div class="header">
   <h1>AYS Rentals</h1>
-  <p>Equipment & Rental Order Form</p>
+  <p>Equipment Rental Order Form</p>
 </div>
 
 <div class="form-container">
-  <form id="orderForm">
+<form id="orderForm">
 
-    <!-- CUSTOMER INFO -->
-    <div class="form-card">
-      <h2>Customer Information</h2>
-      <div class="form-row">
-        <div class="form-group">
-          <label>First Name *</label>
-          <input type="text" name="firstName" required>
-        </div>
-        <div class="form-group">
-          <label>Last Name *</label>
-          <input type="text" name="lastName" required>
-        </div>
+  <!-- CUSTOMER INFO -->
+  <div class="form-card">
+    <h2>Customer / Company Information</h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Company Name *</label>
+        <input type="text" name="companyName" required>
       </div>
+      <div class="form-group">
+        <label>Contact Name *</label>
+        <input type="text" name="contactName" required>
+      </div>
+    </div>
+    <div class="form-row full">
+      <div class="form-group">
+        <label>Street Address *</label>
+        <input type="text" name="companyAddress" required>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>City, State Zip *</label>
+        <input type="text" name="companyCityStateZip" required>
+      </div>
+      <div class="form-group">
+        <label>Contact Phone *</label>
+        <input type="tel" name="contactPhone" required>
+      </div>
+    </div>
+    <div class="form-row full">
+      <div class="form-group">
+        <label>Contact Email *</label>
+        <input type="email" name="contactEmail" required>
+      </div>
+    </div>
+  </div>
+
+  <!-- SITE INFO -->
+  <div class="form-card">
+    <h2>Site Information</h2>
+    <div class="toggle-row">
+      <input type="checkbox" id="sameAsAbove" onchange="toggleSiteInfo()">
+      <label for="sameAsAbove">Same as customer info above</label>
+    </div>
+    <div id="siteFields">
       <div class="form-row">
         <div class="form-group">
-          <label>Email *</label>
-          <input type="email" name="email" required>
+          <label>Site Name</label>
+          <input type="text" name="siteName" id="siteName">
         </div>
         <div class="form-group">
-          <label>Phone *</label>
-          <input type="tel" name="phone" required>
+          <label>Site Contact</label>
+          <input type="text" name="siteContact" id="siteContact">
         </div>
       </div>
       <div class="form-row full">
         <div class="form-group">
-          <label>Company / Organization</label>
-          <input type="text" name="company">
-        </div>
-      </div>
-    </div>
-
-    <!-- DELIVERY INFO -->
-    <div class="form-card">
-      <h2>Delivery Details</h2>
-      <div class="form-row full">
-        <div class="form-group">
-          <label>Delivery Address *</label>
-          <input type="text" name="address" required>
+          <label>Site Address</label>
+          <input type="text" name="siteAddress" id="siteAddress">
         </div>
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label>City *</label>
-          <input type="text" name="city" required>
+          <label>City, State Zip</label>
+          <input type="text" name="siteCityStateZip" id="siteCityStateZip">
         </div>
         <div class="form-group">
-          <label>State *</label>
-          <input type="text" name="state" value="OK" required>
+          <label>Site Phone</label>
+          <input type="tel" name="sitePhone" id="sitePhone">
         </div>
       </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Rental Start Date *</label>
-          <input type="date" name="startDate" required>
-        </div>
-        <div class="form-group">
-          <label>Rental End Date *</label>
-          <input type="date" name="endDate" required>
-        </div>
-      </div>
-    </div>
-
-    <!-- RENTAL ITEMS -->
-    <div class="form-card">
-      <h2>Rental Items</h2>
-      <table class="items-table">
-        <thead>
-          <tr>
-            <th>Item / Equipment</th>
-            <th style="width:80px">Qty</th>
-            <th style="width:120px">Rate</th>
-            <th style="width:100px">Subtotal</th>
-            <th style="width:40px"></th>
-          </tr>
-        </thead>
-        <tbody id="itemsBody">
-          <tr class="item-row">
-            <td><input type="text" name="itemName[]" placeholder="e.g. Dumpster, Porta Potty"></td>
-            <td><input type="number" name="itemQty[]" value="1" min="1" onchange="calcTotals()"></td>
-            <td><input type="number" name="itemRate[]" step="0.01" placeholder="0.00" onchange="calcTotals()"></td>
-            <td class="row-subtotal">$0.00</td>
-            <td><button type="button" class="remove-btn" onclick="removeRow(this)">&times;</button></td>
-          </tr>
-        </tbody>
-      </table>
-      <button type="button" class="add-item-btn" onclick="addRow()">+ Add Item</button>
-
-      <div class="totals-section">
-        <div class="total-row">
-          <span>Subtotal</span>
-          <span id="subtotal">$0.00</span>
-        </div>
-        <div class="total-row">
-          <span>Tax (0%)</span>
-          <span id="tax">$0.00</span>
-        </div>
-        <div class="total-row">
-          <span>Delivery Fee</span>
-          <span id="delivery">$0.00</span>
-        </div>
-        <div class="total-row grand">
-          <span>Total</span>
-          <span id="grandTotal">$0.00</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- NOTES -->
-    <div class="form-card">
-      <h2>Additional Notes</h2>
       <div class="form-row full">
         <div class="form-group">
-          <label>Special Instructions or Notes</label>
-          <textarea name="notes" placeholder="Any special delivery instructions, site access details, etc."></textarea>
+          <label>Site Email</label>
+          <input type="email" name="siteEmail" id="siteEmail">
         </div>
       </div>
     </div>
+  </div>
 
-    <button type="submit" class="submit-btn">Submit Order</button>
-  </form>
+  <!-- ORDER TYPE -->
+  <div class="form-card">
+    <h2>Market Type</h2>
+    <div class="market-toggle">
+      <button type="button" class="market-btn active" onclick="setMarket('construction')" id="btnConstruction">
+        Construction
+        <small>28-Day Billing Cycle</small>
+      </button>
+      <button type="button" class="market-btn" onclick="setMarket('event')" id="btnEvent">
+        Special Event
+        <small>Per-Event Pricing</small>
+      </button>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Estimated Delivery Date *</label>
+        <input type="date" name="deliveryDate" required>
+      </div>
+      <div class="form-group" id="rentalTermGroup">
+        <label>Rental Term</label>
+        <select name="rentalTerm" id="rentalTerm">
+          <option value="28-Days">28-Day Cycle</option>
+          <option value="Event">Event</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- EQUIPMENT -->
+  <div class="form-card">
+    <h2>Equipment</h2>
+    <table class="eq-table">
+      <thead>
+        <tr>
+          <th>Equipment Type</th>
+          <th style="width:70px">Qty</th>
+          <th id="svcHeader" style="width:110px">Weekly Services</th>
+          <th style="width:90px">Unit Price</th>
+          <th style="width:90px">Line Total</th>
+          <th style="width:36px"></th>
+        </tr>
+      </thead>
+      <tbody id="eqBody"></tbody>
+    </table>
+    <button type="button" class="add-item-btn" onclick="addEquipmentRow()">+ Add Equipment</button>
+
+    <!-- DELIVERY & TOTALS -->
+    <div class="totals-section">
+      <div class="total-row">
+        <span>Subtotal</span>
+        <span id="subtotal">$0.00</span>
+      </div>
+      <div class="total-row">
+        <span>Delivery</span>
+        <span>$&nbsp;<input type="number" class="discount-input" id="deliveryFee" value="350" step="0.01" min="0" onchange="calcTotals()" style="width:80px"></span>
+      </div>
+      <div class="total-row">
+        <span>Discount</span>
+        <span><input type="number" class="discount-input" id="discountPct" value="0" min="0" max="100" onchange="calcTotals()">&nbsp;%</span>
+      </div>
+      <div class="total-row grand">
+        <span>Total</span>
+        <span id="grandTotal">$350.00</span>
+      </div>
+    </div>
+
+    <div class="fine-print">
+      <p>* This estimate is for budgeting purposes only. Upon execution of a signed agreement, AYS will generate a formal invoice for payment. Payment must be made in FULL prior to mobilization.</p>
+      <p>* Construction billing is on a 28-day cycle to capture 4 full weeks of service. AYS requires a valid credit card on file. Payment terms are Net 30 from Invoice Date.</p>
+      <p>** Enrolling in the Tip Over Protection Plan (TOPP) protects you from any "off-route" charges relating to uprighting and servicing a unit that has blown over as a result of weather-related events. AYS will dispatch a service technician free of charge within 1 business day.</p>
+      <p>* Off-Route Service charge is a one-time fee assessed at time of request and covers the cost of cleaning a unit. Any off-route service will also incur a Dispatch Fee. Requests outside of standard business hours (M-F 8A-5P) are subject to appropriate modifiers.</p>
+    </div>
+  </div>
+
+  <!-- NOTES -->
+  <div class="form-card">
+    <h2>Additional Notes</h2>
+    <div class="form-row full">
+      <div class="form-group">
+        <label>Special Instructions</label>
+        <textarea name="notes" placeholder="Delivery instructions, site access details, event dates, etc."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <button type="submit" class="submit-btn">Submit Order</button>
+</form>
 </div>
 
-<div class="footer">
-  &copy; 2026 AYS Rentals. All rights reserved.
-</div>
+<div class="footer">&copy; 2026 AYS Rentals. All rights reserved.</div>
 
 <script>
-function addRow() {
-  const tbody = document.getElementById('itemsBody');
-  const row = document.createElement('tr');
-  row.className = 'item-row';
-  row.innerHTML = `
-    <td><input type="text" name="itemName[]" placeholder="e.g. Dumpster, Porta Potty"></td>
-    <td><input type="number" name="itemQty[]" value="1" min="1" onchange="calcTotals()"></td>
-    <td><input type="number" name="itemRate[]" step="0.01" placeholder="0.00" onchange="calcTotals()"></td>
-    <td class="row-subtotal">$0.00</td>
+// ── PRICING DATA ──
+const PRICING = {
+  construction: {
+    items: [
+      { name: "Portable Restroom", rent: 110, svc: 5, freq: { 1: 115, 2: 225, 3: 335 } },
+      { name: "Off-Route Service*", rent: 40, svc: 0, freq: { 1: 40, 2: 40, 3: 40 }, noFreq: true },
+      { name: "Hand Sanitizer (Added Inside RR)", rent: 15, svc: 0, freq: { 1: 15, 2: 30, 3: 45 } },
+      { name: "Handicapped Restroom", rent: 220, svc: 5, freq: { 1: 225, 2: 445, 3: 665 } },
+      { name: "Handwash Station", rent: 250, svc: 5, freq: { 1: 255, 2: 505, 3: 755 } },
+      { name: "HandiStand", rent: 125, svc: 5, freq: { 1: 130, 2: 255, 3: 380 } },
+      { name: "HandiStand Refill", rent: 13, svc: 0, freq: { 1: 13, 2: 13, 3: 13 }, noFreq: true },
+      { name: "Tip Over Protection Plan (TOPP)**", rent: 9, svc: 0, freq: { 1: 9, 2: 9, 3: 9 }, noFreq: true },
+      { name: "Trash Can", rent: 15, svc: 0, freq: { 1: 15, 2: 15, 3: 15 }, noFreq: true },
+      { name: "Holding Tank", rent: 320, svc: 50, freq: { 1: 370, 2: 690, 3: 1010 } },
+      { name: "Water Cube w/ Pump", rent: 360, svc: 50, freq: { 1: 410, 2: 770, 3: 1130 } },
+      { name: "High-Rise Unit", rent: 140, svc: 5, freq: { 1: 145, 2: 285, 3: 425 } },
+      { name: "Single-Mount Trailer", rent: 200, svc: 50, freq: { 1: 250, 2: 450, 3: 650 } },
+      { name: "Double-Mount Trailer", rent: 300, svc: 50, freq: { 1: 350, 2: 650, 3: 950 } },
+      { name: "Grey Special Restroom", rent: 180, svc: 5, freq: { 1: 185, 2: 365, 3: 545 } },
+      { name: "Chain Link Fence", rent: 0, svc: 0, freq: { 1: 0, 2: 0, 3: 0 }, quote: true },
+      { name: "Chain Link Gates (Extra)", rent: 0, svc: 0, freq: { 1: 0, 2: 0, 3: 0 }, quote: true },
+      { name: "Sand Bags", rent: 0, svc: 0, freq: { 1: 0, 2: 0, 3: 0 }, quote: true },
+      { name: "Wind Screen / Privacy Mesh", rent: 0, svc: 0, freq: { 1: 0, 2: 0, 3: 0 }, quote: true },
+      { name: "T-Posts", rent: 0, svc: 0, freq: { 1: 0, 2: 0, 3: 0 }, quote: true },
+      { name: "Fence Delivery", rent: 0, svc: 0, freq: { 1: 0, 2: 0, 3: 0 }, quote: true },
+      { name: "VIP Trailer - Unit 2", rent: 500, svc: 100, freq: { 1: 600, 2: 1100, 3: 1600 } },
+      { name: "VIP Trailer - Unit 3", rent: 600, svc: 100, freq: { 1: 700, 2: 1300, 3: 1900 } },
+      { name: "VIP Trailer - Unit 4", rent: 600, svc: 100, freq: { 1: 700, 2: 1300, 3: 1900 } },
+      { name: "VIP Trailer - Unit 5", rent: 900, svc: 100, freq: { 1: 1000, 2: 1900, 3: 2800 } },
+      { name: "VIP Trailer - Unit 7", rent: 900, svc: 100, freq: { 1: 1000, 2: 1900, 3: 2800 } },
+      { name: "VIP Trailer - Unit 8", rent: 2100, svc: 100, freq: { 1: 2200, 2: 4300, 3: 6400 } },
+      { name: "VIP Trailer - Unit 9", rent: 1700, svc: 100, freq: { 1: 1800, 2: 3500, 3: 5200 } },
+      { name: "VIP Trailer - Unit 10", rent: 1700, svc: 100, freq: { 1: 1800, 2: 3500, 3: 5200 } },
+      { name: "VIP Trailer - Unit 11", rent: 1900, svc: 100, freq: { 1: 2000, 2: 3900, 3: 5800 } },
+      { name: "VIP Trailer - Unit 12", rent: 1400, svc: 100, freq: { 1: 1500, 2: 2900, 3: 4300 } },
+      { name: "VIP Trailer - Unit 13", rent: 1700, svc: 100, freq: { 1: 1800, 2: 3500, 3: 5200 } }
+    ]
+  },
+  event: {
+    items: [
+      { name: "Portable Restroom", price: 85, svc: 5, total: 90 },
+      { name: "Additional Service*", price: 18, svc: 0, total: 18 },
+      { name: "Handicapped Restroom", price: 150, svc: 5, total: 155 },
+      { name: "Handwash Station", price: 160, svc: 5, total: 165 },
+      { name: "HandiStand", price: 125, svc: 5, total: 130 },
+      { name: "HandiStand Refill", price: 13, svc: 0, total: 13 },
+      { name: "Trash Can", price: 15, svc: 0, total: 15 },
+      { name: "Holding Tank", price: 150, svc: 50, total: 200 },
+      { name: "Water Cube w/ Pump", price: 150, svc: 50, total: 200 },
+      { name: "Single-Mount Trailer", price: 200, svc: 50, total: 250 },
+      { name: "Double-Mount Trailer", price: 300, svc: 50, total: 350 },
+      { name: "Flushable Restroom", price: 195, svc: 5, total: 200 },
+      { name: "Whizinator Only", price: 255, svc: 5, total: 260 },
+      { name: "Whizinator Kit (incl. 4 fence panels, mesh, sandbags)", price: 600, svc: 50, total: 650 },
+      { name: "VIP Generator", price: 300, svc: 0, total: 300 },
+      { name: "VIP Water", price: 100, svc: 0, total: 100 },
+      { name: "Chain Link Fence", price: 0, svc: 0, total: 0, quote: true },
+      { name: "Chain Link Gates (Extra)", price: 0, svc: 0, total: 0, quote: true },
+      { name: "Sand Bags", price: 0, svc: 0, total: 0, quote: true },
+      { name: "Wind Screen / Privacy Mesh", price: 0, svc: 0, total: 0, quote: true },
+      { name: "T-Posts", price: 0, svc: 0, total: 0, quote: true },
+      { name: "Fence Delivery", price: 0, svc: 0, total: 0, quote: true },
+      { name: "Barricade Fence", price: 0, svc: 0, total: 0, quote: true },
+      { name: "Gates + Arches", price: 0, svc: 0, total: 0, quote: true },
+      { name: "VIP Trailer - Unit 2", price: 500, svc: 100, total: 600 },
+      { name: "VIP Trailer - Unit 3", price: 600, svc: 100, total: 700 },
+      { name: "VIP Trailer - Unit 4", price: 600, svc: 100, total: 700 },
+      { name: "VIP Trailer - Unit 5", price: 900, svc: 100, total: 1000 },
+      { name: "VIP Trailer - Unit 7", price: 900, svc: 100, total: 1000 },
+      { name: "VIP Trailer - Unit 8", price: 2100, svc: 100, total: 2200 },
+      { name: "VIP Trailer - Unit 9", price: 1700, svc: 100, total: 1800 },
+      { name: "VIP Trailer - Unit 10", price: 1700, svc: 100, total: 1800 },
+      { name: "VIP Trailer - Unit 11", price: 1900, svc: 100, total: 2000 },
+      { name: "VIP Trailer - Unit 12", price: 1400, svc: 100, total: 1500 },
+      { name: "VIP Trailer - Unit 13", price: 1700, svc: 100, total: 1800 }
+    ]
+  }
+};
+
+let currentMarket = 'construction';
+
+function setMarket(type) {
+  currentMarket = type;
+  document.getElementById('btnConstruction').classList.toggle('active', type === 'construction');
+  document.getElementById('btnEvent').classList.toggle('active', type === 'event');
+  document.getElementById('rentalTerm').value = type === 'construction' ? '28-Days' : 'Event';
+  document.getElementById('svcHeader').textContent = type === 'construction' ? 'Weekly Services' : 'Svc/Delivery';
+
+  // Clear and re-add one row
+  document.getElementById('eqBody').innerHTML = '';
+  addEquipmentRow();
+}
+
+function getEquipmentOptions() {
+  const items = PRICING[currentMarket].items;
+  let html = '<option value="">-- Select Equipment --</option>';
+  items.forEach((item, i) => {
+    const label = item.quote ? item.name + ' (Call for quote)' : item.name;
+    html += `<option value="${i}">${label}</option>`;
+  });
+  return html;
+}
+
+function getFreqOptions() {
+  if (currentMarket === 'event') {
+    return '<option value="1">1</option>';
+  }
+  return '<option value="1">1x / Week</option><option value="2">2x / Week</option><option value="3">3x / Week</option>';
+}
+
+function addEquipmentRow() {
+  const tbody = document.getElementById('eqBody');
+  const tr = document.createElement('tr');
+  tr.className = 'eq-row';
+  const freqLabel = currentMarket === 'construction' ? 'Weekly Services' : 'Service/Delivery';
+  tr.innerHTML = `
+    <td data-label="Equipment"><select class="eq-select" onchange="onEquipmentChange(this)">${getEquipmentOptions()}</select></td>
+    <td data-label="Qty"><input type="number" class="eq-qty" value="1" min="1" onchange="calcTotals()"></td>
+    <td data-label="${freqLabel}"><select class="eq-freq" onchange="calcTotals()">${getFreqOptions()}</select></td>
+    <td data-label="Unit Price" class="row-unit" style="text-align:right;font-size:13px;color:#6b7280">-</td>
+    <td data-label="Line Total" class="row-total" style="text-align:right;font-weight:700">$0.00</td>
     <td><button type="button" class="remove-btn" onclick="removeRow(this)">&times;</button></td>
   `;
-  tbody.appendChild(row);
+  tbody.appendChild(tr);
 }
 
 function removeRow(btn) {
-  const rows = document.querySelectorAll('.item-row');
+  const rows = document.querySelectorAll('.eq-row');
   if (rows.length > 1) {
     btn.closest('tr').remove();
     calcTotals();
   }
 }
 
-function calcTotals() {
-  const rows = document.querySelectorAll('.item-row');
-  let subtotal = 0;
-  rows.forEach(row => {
-    const qty = parseFloat(row.querySelector('[name="itemQty[]"]').value) || 0;
-    const rate = parseFloat(row.querySelector('[name="itemRate[]"]').value) || 0;
-    const rowTotal = qty * rate;
-    row.querySelector('.row-subtotal').textContent = '$' + rowTotal.toFixed(2);
-    subtotal += rowTotal;
-  });
-  document.getElementById('subtotal').textContent = '$' + subtotal.toFixed(2);
-  document.getElementById('grandTotal').textContent = '$' + subtotal.toFixed(2);
+function onEquipmentChange(sel) {
+  calcTotals();
 }
 
+function calcTotals() {
+  const rows = document.querySelectorAll('.eq-row');
+  let subtotal = 0;
+
+  rows.forEach(row => {
+    const selVal = row.querySelector('.eq-select').value;
+    const qty = parseInt(row.querySelector('.eq-qty').value) || 0;
+    const freq = parseInt(row.querySelector('.eq-freq').value) || 1;
+    const unitCell = row.querySelector('.row-unit');
+    const totalCell = row.querySelector('.row-total');
+
+    if (selVal === '') {
+      unitCell.textContent = '-';
+      totalCell.textContent = '$0.00';
+      return;
+    }
+
+    const idx = parseInt(selVal);
+    const items = PRICING[currentMarket].items;
+    const item = items[idx];
+
+    if (item.quote) {
+      unitCell.textContent = 'Quote';
+      totalCell.textContent = 'TBD';
+      return;
+    }
+
+    let unitPrice, lineTotal;
+    if (currentMarket === 'construction') {
+      unitPrice = item.freq[freq] || 0;
+      lineTotal = unitPrice * qty;
+    } else {
+      unitPrice = item.total;
+      lineTotal = unitPrice * qty;
+    }
+
+    unitCell.textContent = '$' + unitPrice.toFixed(2);
+    totalCell.textContent = '$' + lineTotal.toFixed(2);
+    subtotal += lineTotal;
+  });
+
+  const deliveryFee = parseFloat(document.getElementById('deliveryFee').value) || 0;
+  const discountPct = parseFloat(document.getElementById('discountPct').value) || 0;
+
+  document.getElementById('subtotal').textContent = '$' + subtotal.toFixed(2);
+
+  const discountAmt = subtotal * (discountPct / 100);
+  const grand = subtotal - discountAmt + deliveryFee;
+
+  document.getElementById('grandTotal').textContent = '$' + grand.toFixed(2);
+}
+
+function toggleSiteInfo() {
+  const checked = document.getElementById('sameAsAbove').checked;
+  const fields = document.getElementById('siteFields');
+  fields.style.opacity = checked ? '0.4' : '1';
+  fields.style.pointerEvents = checked ? 'none' : 'auto';
+
+  if (checked) {
+    document.getElementById('siteName').value = document.querySelector('[name="companyName"]').value;
+    document.getElementById('siteContact').value = document.querySelector('[name="contactName"]').value;
+    document.getElementById('siteAddress').value = document.querySelector('[name="companyAddress"]').value;
+    document.getElementById('siteCityStateZip').value = document.querySelector('[name="companyCityStateZip"]').value;
+    document.getElementById('sitePhone').value = document.querySelector('[name="contactPhone"]').value;
+    document.getElementById('siteEmail').value = document.querySelector('[name="contactEmail"]').value;
+  }
+}
+
+// TODO: Connect form submission to backend router / API
+// - POST form data (customer info, site info, equipment lines, totals) to server endpoint
+// - Handle validation, confirmation email, and order storage
+// - Options: Express/Node API, serverless function, or email service (e.g. Formspree, SendGrid)
 document.getElementById('orderForm').addEventListener('submit', function(e) {
   e.preventDefault();
-  alert('Order submitted! (Connect to your backend or email service to process.)');
+
+  // Collect all form data for backend submission
+  const formData = new FormData(this);
+  const orderData = {
+    market: currentMarket,
+    customer: {
+      company: formData.get('companyName'),
+      contact: formData.get('contactName'),
+      address: formData.get('companyAddress'),
+      cityStateZip: formData.get('companyCityStateZip'),
+      phone: formData.get('contactPhone'),
+      email: formData.get('contactEmail')
+    },
+    site: {
+      sameAsCustomer: document.getElementById('sameAsAbove').checked,
+      name: formData.get('siteName'),
+      contact: formData.get('siteContact'),
+      address: formData.get('siteAddress'),
+      cityStateZip: formData.get('siteCityStateZip'),
+      phone: formData.get('sitePhone'),
+      email: formData.get('siteEmail')
+    },
+    delivery: {
+      date: formData.get('deliveryDate'),
+      term: formData.get('rentalTerm')
+    },
+    equipment: getEquipmentLines(),
+    totals: {
+      subtotal: document.getElementById('subtotal').textContent,
+      deliveryFee: document.getElementById('deliveryFee').value,
+      discount: document.getElementById('discountPct').value,
+      grandTotal: document.getElementById('grandTotal').textContent
+    },
+    notes: formData.get('notes')
+  };
+
+  console.log('Order data ready for API:', orderData);
+  alert('Order submitted! Connect to backend router to process. Check console for data payload.');
 });
+
+function getEquipmentLines() {
+  const rows = document.querySelectorAll('.eq-row');
+  const lines = [];
+  rows.forEach(row => {
+    const selVal = row.querySelector('.eq-select').value;
+    if (selVal === '') return;
+    const idx = parseInt(selVal);
+    const items = PRICING[currentMarket].items;
+    lines.push({
+      item: items[idx].name,
+      qty: parseInt(row.querySelector('.eq-qty').value) || 0,
+      frequency: parseInt(row.querySelector('.eq-freq').value) || 1,
+      lineTotal: row.querySelector('.row-total').textContent
+    });
+  });
+  return lines;
+}
+
+// Init with one row
+addEquipmentRow();
 </script>
 </body>
 </html>
