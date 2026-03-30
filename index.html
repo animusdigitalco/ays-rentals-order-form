@@ -396,16 +396,12 @@ body {
         <span id="subtotal">$0.00</span>
       </div>
       <div class="total-row">
-        <span>Delivery</span>
-        <span id="deliveryFee">$350.00</span>
-      </div>
-      <div class="total-row">
         <span>Discount</span>
         <span><input type="number" class="discount-input" id="discountPct" value="0" min="0" max="100" onchange="calcTotals()">&nbsp;%</span>
       </div>
       <div class="total-row grand">
         <span>Total</span>
-        <span id="grandTotal">$350.00</span>
+        <span id="grandTotal">$0.00</span>
       </div>
     </div>
 
@@ -550,7 +546,8 @@ const PRICING = {
       { name: "VIP Trailer - Unit 10", rent: 1700, svc: 100, freq: { 1: 1800, 2: 3500, 3: 5200 } },
       { name: "VIP Trailer - Unit 11", rent: 1900, svc: 100, freq: { 1: 2000, 2: 3900, 3: 5800 } },
       { name: "VIP Trailer - Unit 12", rent: 1400, svc: 100, freq: { 1: 1500, 2: 2900, 3: 4300 } },
-      { name: "VIP Trailer - Unit 13", rent: 1700, svc: 100, freq: { 1: 1800, 2: 3500, 3: 5200 } }
+      { name: "VIP Trailer - Unit 13", rent: 1700, svc: 100, freq: { 1: 1800, 2: 3500, 3: 5200 } },
+      { name: "Delivery", rent: 350, svc: 0, freq: { 1: 350, 2: 350, 3: 350 }, noFreq: true }
     ]
   },
   event: {
@@ -589,7 +586,8 @@ const PRICING = {
       { name: "VIP Trailer - Unit 10", price: 1700, svc: 100, total: 1800 },
       { name: "VIP Trailer - Unit 11", price: 1900, svc: 100, total: 2000 },
       { name: "VIP Trailer - Unit 12", price: 1400, svc: 100, total: 1500 },
-      { name: "VIP Trailer - Unit 13", price: 1700, svc: 100, total: 1800 }
+      { name: "VIP Trailer - Unit 13", price: 1700, svc: 100, total: 1800 },
+      { name: "Delivery", price: 350, svc: 0, total: 350 }
     ]
   }
 };
@@ -658,7 +656,6 @@ function onEquipmentChange(sel) {
 function calcTotals() {
   const rows = document.querySelectorAll('.eq-row');
   let subtotal = 0;
-  const DELIVERY_FEE = 350;
 
   rows.forEach(row => {
     const selVal = row.querySelector('.eq-select').value;
@@ -712,10 +709,9 @@ function calcTotals() {
   const discountPct = parseFloat(document.getElementById('discountPct').value) || 0;
 
   document.getElementById('subtotal').textContent = '$' + subtotal.toFixed(2);
-  document.getElementById('deliveryFee').textContent = '$' + DELIVERY_FEE.toFixed(2);
 
   const discountAmt = subtotal * (discountPct / 100);
-  const grand = subtotal - discountAmt + DELIVERY_FEE;
+  const grand = subtotal - discountAmt;
 
   document.getElementById('grandTotal').textContent = '$' + grand.toFixed(2);
 }
@@ -771,7 +767,7 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
     equipment: getEquipmentLines(),
     totals: {
       subtotal: document.getElementById('subtotal').textContent,
-      deliveryFee: '350.00',
+      deliveryFee: 'included in line items if applicable',
       discount: document.getElementById('discountPct').value,
       grandTotal: document.getElementById('grandTotal').textContent
     },
