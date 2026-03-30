@@ -4,37 +4,65 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AYS Rentals | Order Form</title>
+<link rel="icon" href="https://cdn.prod.website-files.com/6675dfe514252bcb3ac3eb2b/6709eab9c2f8d93f1f1cd820_Group%2050.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --primary: #1a1a2e;
-  --accent: #e94560;
-  --blue: #0f3460;
-  --bg: #f5f6fa;
+  --primary: #193440;
+  --brand: #29a4dc;
+  --bg-dark: #051829;
+  --orange: #db8a2a;
+  --bg: #f3f3f3;
   --white: #ffffff;
-  --gray: #6b7280;
-  --green: #059669;
+  --gray: #686868;
+  --body: #333333;
   --radius: 12px;
-  --shadow: 0 4px 20px rgba(0,0,0,0.08);
+  --shadow: 0 4px 20px rgba(5,24,41,0.10);
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Inter', sans-serif;
   background: var(--bg);
-  color: var(--primary);
+  color: var(--body);
   line-height: 1.6;
   min-height: 100vh;
 }
 
 .header {
-  background: var(--primary);
+  background: var(--bg-dark);
   color: var(--white);
   padding: 20px 24px;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
-.header h1 { font-size: 24px; font-weight: 700; letter-spacing: 1px; }
-.header p { font-size: 14px; opacity: 0.7; margin-top: 4px; }
+.header-logo { height: 40px; width: auto; }
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.header-phone {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--white);
+  text-decoration: none;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+.header-phone:hover { opacity: 1; color: var(--brand); }
+.header-title {
+  font-family: 'Ubuntu', sans-serif;
+  text-align: center;
+  flex: 1;
+}
+.header-title h1 { font-size: 20px; font-weight: 700; letter-spacing: 0.5px; }
+.header-title p { font-size: 13px; opacity: 0.6; margin-top: 2px; font-family: 'IBM Plex Mono', monospace; }
 
 .form-container {
   max-width: 800px;
@@ -50,8 +78,10 @@ body {
   margin-bottom: 24px;
 }
 .form-card h2 {
+  font-family: 'Ubuntu', sans-serif;
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 700;
+  color: var(--primary);
   margin-bottom: 20px;
   padding-bottom: 12px;
   border-bottom: 2px solid var(--bg);
@@ -68,8 +98,9 @@ body {
 
 .form-group { display: flex; flex-direction: column; }
 .form-group label {
-  font-size: 13px;
-  font-weight: 600;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
   color: var(--gray);
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -90,7 +121,7 @@ body {
 }
 .form-group input:focus,
 .form-group select:focus,
-.form-group textarea:focus { border-color: var(--accent); }
+.form-group textarea:focus { border-color: var(--brand); }
 .form-group textarea { resize: vertical; min-height: 80px; }
 
 /* MARKET TYPE TOGGLE */
@@ -111,16 +142,17 @@ body {
   transition: all 0.2s;
   text-align: center;
 }
-.market-btn:hover { border-color: var(--blue); }
+.market-btn:hover { border-color: var(--brand); }
 .market-btn.active {
-  border-color: var(--blue);
-  background: var(--blue);
+  border-color: var(--brand);
+  background: var(--brand);
   color: var(--white);
 }
 .market-btn small {
   display: block;
+  font-family: 'IBM Plex Mono', monospace;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 11px;
   opacity: 0.7;
   margin-top: 2px;
 }
@@ -137,7 +169,7 @@ body {
 .toggle-row input[type="checkbox"] {
   width: 18px;
   height: 18px;
-  accent-color: var(--blue);
+  accent-color: var(--brand);
 }
 
 /* EQUIPMENT TABLE */
@@ -148,7 +180,8 @@ body {
   font-size: 14px;
 }
 .eq-table th {
-  font-size: 11px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -174,7 +207,7 @@ body {
   outline: none;
 }
 .eq-table select:focus,
-.eq-table input:focus { border-color: var(--accent); }
+.eq-table input:focus { border-color: var(--brand); }
 
 .eq-table .row-total {
   font-weight: 700;
@@ -198,7 +231,7 @@ body {
   cursor: pointer;
   transition: all 0.2s;
 }
-.add-item-btn:hover { border-color: var(--accent); color: var(--accent); }
+.add-item-btn:hover { border-color: var(--brand); color: var(--brand); }
 
 .remove-btn {
   background: none;
@@ -209,7 +242,7 @@ body {
   padding: 4px 8px;
   border-radius: 4px;
 }
-.remove-btn:hover { color: var(--accent); }
+.remove-btn:hover { color: #da4e4e; }
 
 /* TOTALS */
 .totals-section {
@@ -229,12 +262,13 @@ body {
   padding: 4px 0;
 }
 .total-row.grand {
+  font-family: 'Ubuntu', sans-serif;
   font-size: 20px;
   font-weight: 700;
   padding-top: 10px;
   margin-top: 4px;
   border-top: 2px solid var(--primary);
-  color: var(--blue);
+  color: var(--brand);
 }
 .total-row .discount-input {
   width: 60px;
@@ -245,7 +279,7 @@ body {
   text-align: center;
   outline: none;
 }
-.total-row .discount-input:focus { border-color: var(--accent); }
+.total-row .discount-input:focus { border-color: var(--brand); }
 
 /* FINE PRINT */
 .fine-print {
@@ -262,20 +296,21 @@ body {
   display: block;
   width: 100%;
   padding: 16px 32px;
-  background: var(--accent);
+  background: var(--brand);
   color: var(--white);
   border: none;
   border-radius: var(--radius);
+  font-family: 'Ubuntu', sans-serif;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 4px 16px rgba(233,69,96,0.3);
+  box-shadow: 0 4px 16px rgba(41,164,220,0.3);
 }
 .submit-btn:hover {
-  background: #d63851;
+  background: #1e8fc0;
   transform: translateY(-1px);
-  box-shadow: 0 6px 24px rgba(233,69,96,0.4);
+  box-shadow: 0 6px 24px rgba(41,164,220,0.4);
 }
 
 .footer {
@@ -334,8 +369,16 @@ body {
 <body>
 
 <div class="header">
-  <h1>AYS Rentals</h1>
-  <p>Equipment Rental Order Form</p>
+  <a href="https://www.aysrentals.com">
+    <img src="https://cdn.prod.website-files.com/6675dfe514252bcb3ac3eb2b/66c610a265799df71b3965a6_Group%2046.svg" alt="AYS Rentals" class="header-logo">
+  </a>
+  <div class="header-title">
+    <h1>Order Form</h1>
+    <p>Equipment &amp; Rental Pricing</p>
+  </div>
+  <div class="header-right">
+    <a href="tel:9182720568" class="header-phone">(918) 272-0568</a>
+  </div>
 </div>
 
 <div class="form-container">
@@ -506,7 +549,11 @@ body {
 </form>
 </div>
 
-<div class="footer">&copy; 2026 AYS Rentals. All rights reserved.</div>
+<div class="footer">
+  &copy; 2026 AYS Rentals. All rights reserved. &nbsp;|&nbsp;
+  <a href="mailto:aysteam@aysrentals.com" style="color:var(--brand);text-decoration:none;">aysteam@aysrentals.com</a> &nbsp;|&nbsp;
+  <a href="tel:9182720568" style="color:var(--brand);text-decoration:none;">(918) 272-0568</a>
+</div>
 
 <script>
 // ── PRICING DATA ──
