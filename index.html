@@ -341,6 +341,93 @@ body {
 <div class="form-container">
 <form id="orderForm">
 
+  <!-- ORDER TYPE -->
+  <div class="form-card">
+    <h2>Market Type</h2>
+    <div class="market-toggle">
+      <button type="button" class="market-btn active" onclick="setMarket('construction')" id="btnConstruction">
+        Construction
+        <small>28-Day Billing Cycle</small>
+      </button>
+      <button type="button" class="market-btn" onclick="setMarket('event')" id="btnEvent">
+        Special Event
+        <small>Per-Event Pricing</small>
+      </button>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Estimated Delivery Date *</label>
+        <input type="date" name="deliveryDate" required>
+      </div>
+      <div class="form-group" id="rentalTermGroup">
+        <label>Rental Term</label>
+        <select name="rentalTerm" id="rentalTerm">
+          <option value="28-Days">28-Day Cycle</option>
+          <option value="Event">Event</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- EQUIPMENT -->
+  <div class="form-card">
+    <h2>Equipment</h2>
+    <table class="eq-table">
+      <thead>
+        <tr>
+          <th>Equipment Type</th>
+          <th style="width:70px">Qty</th>
+          <th id="svcHeader" style="width:120px">Svc Frequency</th>
+          <th style="width:80px">Rent</th>
+          <th style="width:80px">Svc Cost</th>
+          <th style="width:90px">Unit Total</th>
+          <th style="width:90px">Line Total</th>
+          <th style="width:36px"></th>
+        </tr>
+      </thead>
+      <tbody id="eqBody"></tbody>
+    </table>
+    <button type="button" class="add-item-btn" onclick="addEquipmentRow()">+ Add Equipment</button>
+
+    <!-- DELIVERY & TOTALS -->
+    <div class="totals-section">
+      <div class="total-row">
+        <span>Subtotal</span>
+        <span id="subtotal">$0.00</span>
+      </div>
+      <div class="total-row">
+        <span>Delivery</span>
+        <span id="deliveryFee">$350.00</span>
+      </div>
+      <div class="total-row">
+        <span>Discount</span>
+        <span><input type="number" class="discount-input" id="discountPct" value="0" min="0" max="100" onchange="calcTotals()">&nbsp;%</span>
+      </div>
+      <div class="total-row grand">
+        <span>Total</span>
+        <span id="grandTotal">$350.00</span>
+      </div>
+    </div>
+
+    <div class="fine-print">
+      <p>* This estimate is for budgeting purposes only. Upon execution of a signed agreement, AYS will generate a formal invoice for payment. Payment must be made in FULL prior to mobilization.</p>
+      <p>* Construction billing is on a 28-day cycle to capture 4 full weeks of service. AYS requires a valid credit card on file. Payment terms are Net 30 from Invoice Date.</p>
+      <p>** Enrolling in the Tip Over Protection Plan (TOPP) protects you from any "off-route" charges relating to uprighting and servicing a unit that has blown over as a result of weather-related events. AYS will dispatch a service technician free of charge within 1 business day.</p>
+      <p>* Off-Route Service charge is a one-time fee assessed at time of request and covers the cost of cleaning a unit. Any off-route service will also incur a Dispatch Fee. Requests outside of standard business hours (M-F 8A-5P) are subject to appropriate modifiers.</p>
+    </div>
+  </div>
+
+  <!-- NOTES -->
+  <div class="form-card">
+    <h2>Additional Notes</h2>
+    <div class="form-row full">
+      <div class="form-group">
+        <label>Special Instructions</label>
+        <textarea name="notes" placeholder="Delivery instructions, site access details, event dates, etc."></textarea>
+      </div>
+    </div>
+  </div>
+
   <!-- CUSTOMER INFO -->
   <div class="form-card">
     <h2>Customer / Company Information</h2>
@@ -383,7 +470,7 @@ body {
     <h2>Site Information</h2>
     <div class="toggle-row">
       <input type="checkbox" id="sameAsAbove" onchange="toggleSiteInfo()">
-      <label for="sameAsAbove">Same as customer info above</label>
+      <label for="sameAsAbove">Same as customer info</label>
     </div>
     <div id="siteFields">
       <div class="form-row">
@@ -417,91 +504,6 @@ body {
           <label>Site Email</label>
           <input type="email" name="siteEmail" id="siteEmail">
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ORDER TYPE -->
-  <div class="form-card">
-    <h2>Market Type</h2>
-    <div class="market-toggle">
-      <button type="button" class="market-btn active" onclick="setMarket('construction')" id="btnConstruction">
-        Construction
-        <small>28-Day Billing Cycle</small>
-      </button>
-      <button type="button" class="market-btn" onclick="setMarket('event')" id="btnEvent">
-        Special Event
-        <small>Per-Event Pricing</small>
-      </button>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Estimated Delivery Date *</label>
-        <input type="date" name="deliveryDate" required>
-      </div>
-      <div class="form-group" id="rentalTermGroup">
-        <label>Rental Term</label>
-        <select name="rentalTerm" id="rentalTerm">
-          <option value="28-Days">28-Day Cycle</option>
-          <option value="Event">Event</option>
-        </select>
-      </div>
-    </div>
-  </div>
-
-  <!-- EQUIPMENT -->
-  <div class="form-card">
-    <h2>Equipment</h2>
-    <table class="eq-table">
-      <thead>
-        <tr>
-          <th>Equipment Type</th>
-          <th style="width:70px">Qty</th>
-          <th id="svcHeader" style="width:110px">Weekly Services</th>
-          <th style="width:90px">Unit Price</th>
-          <th style="width:90px">Line Total</th>
-          <th style="width:36px"></th>
-        </tr>
-      </thead>
-      <tbody id="eqBody"></tbody>
-    </table>
-    <button type="button" class="add-item-btn" onclick="addEquipmentRow()">+ Add Equipment</button>
-
-    <!-- DELIVERY & TOTALS -->
-    <div class="totals-section">
-      <div class="total-row">
-        <span>Subtotal</span>
-        <span id="subtotal">$0.00</span>
-      </div>
-      <div class="total-row">
-        <span>Delivery</span>
-        <span>$&nbsp;<input type="number" class="discount-input" id="deliveryFee" value="350" step="0.01" min="0" onchange="calcTotals()" style="width:80px"></span>
-      </div>
-      <div class="total-row">
-        <span>Discount</span>
-        <span><input type="number" class="discount-input" id="discountPct" value="0" min="0" max="100" onchange="calcTotals()">&nbsp;%</span>
-      </div>
-      <div class="total-row grand">
-        <span>Total</span>
-        <span id="grandTotal">$350.00</span>
-      </div>
-    </div>
-
-    <div class="fine-print">
-      <p>* This estimate is for budgeting purposes only. Upon execution of a signed agreement, AYS will generate a formal invoice for payment. Payment must be made in FULL prior to mobilization.</p>
-      <p>* Construction billing is on a 28-day cycle to capture 4 full weeks of service. AYS requires a valid credit card on file. Payment terms are Net 30 from Invoice Date.</p>
-      <p>** Enrolling in the Tip Over Protection Plan (TOPP) protects you from any "off-route" charges relating to uprighting and servicing a unit that has blown over as a result of weather-related events. AYS will dispatch a service technician free of charge within 1 business day.</p>
-      <p>* Off-Route Service charge is a one-time fee assessed at time of request and covers the cost of cleaning a unit. Any off-route service will also incur a Dispatch Fee. Requests outside of standard business hours (M-F 8A-5P) are subject to appropriate modifiers.</p>
-    </div>
-  </div>
-
-  <!-- NOTES -->
-  <div class="form-card">
-    <h2>Additional Notes</h2>
-    <div class="form-row full">
-      <div class="form-group">
-        <label>Special Instructions</label>
-        <textarea name="notes" placeholder="Delivery instructions, site access details, event dates, etc."></textarea>
       </div>
     </div>
   </div>
@@ -599,7 +601,7 @@ function setMarket(type) {
   document.getElementById('btnConstruction').classList.toggle('active', type === 'construction');
   document.getElementById('btnEvent').classList.toggle('active', type === 'event');
   document.getElementById('rentalTerm').value = type === 'construction' ? '28-Days' : 'Event';
-  document.getElementById('svcHeader').textContent = type === 'construction' ? 'Weekly Services' : 'Svc/Delivery';
+  document.getElementById('svcHeader').textContent = type === 'construction' ? 'Svc Frequency' : 'Service';
 
   // Clear and re-add one row
   document.getElementById('eqBody').innerHTML = '';
@@ -627,12 +629,14 @@ function addEquipmentRow() {
   const tbody = document.getElementById('eqBody');
   const tr = document.createElement('tr');
   tr.className = 'eq-row';
-  const freqLabel = currentMarket === 'construction' ? 'Weekly Services' : 'Service/Delivery';
+  const freqLabel = currentMarket === 'construction' ? 'Svc Frequency' : 'Service';
   tr.innerHTML = `
     <td data-label="Equipment"><select class="eq-select" onchange="onEquipmentChange(this)">${getEquipmentOptions()}</select></td>
     <td data-label="Qty"><input type="number" class="eq-qty" value="1" min="1" onchange="calcTotals()"></td>
     <td data-label="${freqLabel}"><select class="eq-freq" onchange="calcTotals()">${getFreqOptions()}</select></td>
-    <td data-label="Unit Price" class="row-unit" style="text-align:right;font-size:13px;color:#6b7280">-</td>
+    <td data-label="Rent" class="row-rent" style="text-align:right;font-size:13px;color:#6b7280">-</td>
+    <td data-label="Svc Cost" class="row-svc" style="text-align:right;font-size:13px;color:#6b7280">-</td>
+    <td data-label="Unit Total" class="row-unit" style="text-align:right;font-size:13px;color:#6b7280">-</td>
     <td data-label="Line Total" class="row-total" style="text-align:right;font-weight:700">$0.00</td>
     <td><button type="button" class="remove-btn" onclick="removeRow(this)">&times;</button></td>
   `;
@@ -654,15 +658,20 @@ function onEquipmentChange(sel) {
 function calcTotals() {
   const rows = document.querySelectorAll('.eq-row');
   let subtotal = 0;
+  const DELIVERY_FEE = 350;
 
   rows.forEach(row => {
     const selVal = row.querySelector('.eq-select').value;
     const qty = parseInt(row.querySelector('.eq-qty').value) || 0;
     const freq = parseInt(row.querySelector('.eq-freq').value) || 1;
+    const rentCell = row.querySelector('.row-rent');
+    const svcCell = row.querySelector('.row-svc');
     const unitCell = row.querySelector('.row-unit');
     const totalCell = row.querySelector('.row-total');
 
     if (selVal === '') {
+      rentCell.textContent = '-';
+      svcCell.textContent = '-';
       unitCell.textContent = '-';
       totalCell.textContent = '$0.00';
       return;
@@ -673,32 +682,40 @@ function calcTotals() {
     const item = items[idx];
 
     if (item.quote) {
+      rentCell.textContent = '-';
+      svcCell.textContent = '-';
       unitCell.textContent = 'Quote';
       totalCell.textContent = 'TBD';
       return;
     }
 
-    let unitPrice, lineTotal;
+    let rent, svcCost, unitPrice, lineTotal;
     if (currentMarket === 'construction') {
+      rent = item.rent;
+      svcCost = item.svc * freq;
       unitPrice = item.freq[freq] || 0;
       lineTotal = unitPrice * qty;
     } else {
+      rent = item.price;
+      svcCost = item.svc;
       unitPrice = item.total;
       lineTotal = unitPrice * qty;
     }
 
+    rentCell.textContent = '$' + rent.toFixed(2);
+    svcCell.textContent = '$' + svcCost.toFixed(2);
     unitCell.textContent = '$' + unitPrice.toFixed(2);
     totalCell.textContent = '$' + lineTotal.toFixed(2);
     subtotal += lineTotal;
   });
 
-  const deliveryFee = parseFloat(document.getElementById('deliveryFee').value) || 0;
   const discountPct = parseFloat(document.getElementById('discountPct').value) || 0;
 
   document.getElementById('subtotal').textContent = '$' + subtotal.toFixed(2);
+  document.getElementById('deliveryFee').textContent = '$' + DELIVERY_FEE.toFixed(2);
 
   const discountAmt = subtotal * (discountPct / 100);
-  const grand = subtotal - discountAmt + deliveryFee;
+  const grand = subtotal - discountAmt + DELIVERY_FEE;
 
   document.getElementById('grandTotal').textContent = '$' + grand.toFixed(2);
 }
@@ -754,7 +771,7 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
     equipment: getEquipmentLines(),
     totals: {
       subtotal: document.getElementById('subtotal').textContent,
-      deliveryFee: document.getElementById('deliveryFee').value,
+      deliveryFee: '350.00',
       discount: document.getElementById('discountPct').value,
       grandTotal: document.getElementById('grandTotal').textContent
     },
