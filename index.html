@@ -354,19 +354,13 @@ body {
         <small>Per-Event Pricing</small>
       </button>
     </div>
-    <div class="form-row">
+    <div class="form-row full">
       <div class="form-group">
         <label>Estimated Delivery Date *</label>
         <input type="date" name="deliveryDate" required>
       </div>
-      <div class="form-group" id="rentalTermGroup">
-        <label>Rental Term</label>
-        <select name="rentalTerm" id="rentalTerm">
-          <option value="28-Days">28-Day Cycle</option>
-          <option value="Event">Event</option>
-        </select>
-      </div>
     </div>
+    <input type="hidden" name="rentalTerm" id="rentalTerm" value="28-Days">
   </div>
 
   <!-- EQUIPMENT -->
@@ -378,8 +372,8 @@ body {
           <th>Equipment Type</th>
           <th style="width:70px">Qty</th>
           <th id="svcHeader" style="width:120px">Svc Frequency</th>
+          <th style="width:90px">Service</th>
           <th style="width:80px">Rent</th>
-          <th style="width:80px">Svc Cost</th>
           <th style="width:90px">Unit Total</th>
           <th style="width:90px">Line Total</th>
           <th style="width:36px"></th>
@@ -394,6 +388,10 @@ body {
       <div class="total-row">
         <span>Subtotal</span>
         <span id="subtotal">$0.00</span>
+      </div>
+      <div class="total-row">
+        <span>Delivery (optional)</span>
+        <span>$&nbsp;<input type="number" class="discount-input" id="deliveryFee" value="" step="0.01" min="0" placeholder="0.00" onchange="calcTotals()" style="width:80px"></span>
       </div>
       <div class="total-row">
         <span>Discount</span>
@@ -512,82 +510,86 @@ body {
 
 <script>
 // ── PRICING DATA ──
+// Construction: Total per unit = (service × frequency) + rent
+// Special Event: Total per unit = eventPrice + rent
 const PRICING = {
   construction: {
     items: [
-      { name: "Portable Restroom", rent: 110, svc: 5, freq: { 1: 115, 2: 225, 3: 335 } },
-      { name: "Off-Route Service*", rent: 40, svc: 0, freq: { 1: 40, 2: 40, 3: 40 }, noFreq: true },
-      { name: "Hand Sanitizer (Added Inside RR)", rent: 15, svc: 0, freq: { 1: 15, 2: 30, 3: 45 } },
-      { name: "Handicapped Restroom", rent: 220, svc: 5, freq: { 1: 225, 2: 445, 3: 665 } },
-      { name: "Handwash Station", rent: 250, svc: 5, freq: { 1: 255, 2: 505, 3: 755 } },
-      { name: "HandiStand", rent: 125, svc: 5, freq: { 1: 130, 2: 255, 3: 380 } },
-      { name: "HandiStand Refill", rent: 13, svc: 0, freq: { 1: 13, 2: 13, 3: 13 }, noFreq: true },
-      { name: "Tip Over Protection Plan (TOPP)**", rent: 9, svc: 0, freq: { 1: 9, 2: 9, 3: 9 }, noFreq: true },
-      { name: "Trash Can", rent: 15, svc: 0, freq: { 1: 15, 2: 15, 3: 15 }, noFreq: true },
-      { name: "Holding Tank", rent: 320, svc: 50, freq: { 1: 370, 2: 690, 3: 1010 } },
-      { name: "Water Cube w/ Pump", rent: 360, svc: 50, freq: { 1: 410, 2: 770, 3: 1130 } },
-      { name: "High-Rise Unit", rent: 140, svc: 5, freq: { 1: 145, 2: 285, 3: 425 } },
-      { name: "Single-Mount Trailer", rent: 200, svc: 50, freq: { 1: 250, 2: 450, 3: 650 } },
-      { name: "Double-Mount Trailer", rent: 300, svc: 50, freq: { 1: 350, 2: 650, 3: 950 } },
-      { name: "Grey Special Restroom", rent: 180, svc: 5, freq: { 1: 185, 2: 365, 3: 545 } },
-      { name: "Chain Link Fence", rent: 0, svc: 0, freq: { 1: 0, 2: 0, 3: 0 }, quote: true },
-      { name: "Chain Link Gates (Extra)", rent: 0, svc: 0, freq: { 1: 0, 2: 0, 3: 0 }, quote: true },
-      { name: "Sand Bags", rent: 0, svc: 0, freq: { 1: 0, 2: 0, 3: 0 }, quote: true },
-      { name: "Wind Screen / Privacy Mesh", rent: 0, svc: 0, freq: { 1: 0, 2: 0, 3: 0 }, quote: true },
-      { name: "T-Posts", rent: 0, svc: 0, freq: { 1: 0, 2: 0, 3: 0 }, quote: true },
-      { name: "Fence Delivery", rent: 0, svc: 0, freq: { 1: 0, 2: 0, 3: 0 }, quote: true },
-      { name: "VIP Trailer - Unit 2", rent: 500, svc: 100, freq: { 1: 600, 2: 1100, 3: 1600 } },
-      { name: "VIP Trailer - Unit 3", rent: 600, svc: 100, freq: { 1: 700, 2: 1300, 3: 1900 } },
-      { name: "VIP Trailer - Unit 4", rent: 600, svc: 100, freq: { 1: 700, 2: 1300, 3: 1900 } },
-      { name: "VIP Trailer - Unit 5", rent: 900, svc: 100, freq: { 1: 1000, 2: 1900, 3: 2800 } },
-      { name: "VIP Trailer - Unit 7", rent: 900, svc: 100, freq: { 1: 1000, 2: 1900, 3: 2800 } },
-      { name: "VIP Trailer - Unit 8", rent: 2100, svc: 100, freq: { 1: 2200, 2: 4300, 3: 6400 } },
-      { name: "VIP Trailer - Unit 9", rent: 1700, svc: 100, freq: { 1: 1800, 2: 3500, 3: 5200 } },
-      { name: "VIP Trailer - Unit 10", rent: 1700, svc: 100, freq: { 1: 1800, 2: 3500, 3: 5200 } },
-      { name: "VIP Trailer - Unit 11", rent: 1900, svc: 100, freq: { 1: 2000, 2: 3900, 3: 5800 } },
-      { name: "VIP Trailer - Unit 12", rent: 1400, svc: 100, freq: { 1: 1500, 2: 2900, 3: 4300 } },
-      { name: "VIP Trailer - Unit 13", rent: 1700, svc: 100, freq: { 1: 1800, 2: 3500, 3: 5200 } },
-      { name: "Delivery", rent: 350, svc: 0, freq: { 1: 350, 2: 350, 3: 350 }, noFreq: true }
+      // { name, service (per-service cost), rent (base rental/delivery), noFreq, quote }
+      { name: "Portable Restroom", service: 110, rent: 5 },
+      { name: "Off-Route Service*", service: 40, rent: 0, noFreq: true },
+      { name: "Dispatch Fee", service: 0, rent: 0, quote: true },
+      { name: "Hand Sanitizer (Added Inside RR)", service: 15, rent: 0 },
+      { name: "Handicapped Restroom", service: 220, rent: 5 },
+      { name: "Handwash Station", service: 250, rent: 5 },
+      { name: "HandiStand", service: 125, rent: 5 },
+      { name: "HandiStand Refill", service: 13, rent: 0, noFreq: true },
+      { name: "Tip Over Protection Plan (TOPP)**", service: 9, rent: 0, noFreq: true },
+      { name: "Trash Can", service: 15, rent: 0, noFreq: true },
+      { name: "Holding Tank", service: 320, rent: 50 },
+      { name: "Water Cube w/ Pump", service: 360, rent: 50 },
+      { name: "High-Rise Unit", service: 140, rent: 5 },
+      { name: "Single-Mount Trailer", service: 200, rent: 50 },
+      { name: "Double-Mount Trailer", service: 300, rent: 50 },
+      { name: "Grey Special Restroom", service: 180, rent: 5 },
+      { name: "Chain Link Fence", service: 0, rent: 0, quote: true },
+      { name: "Chain Link Gates (Extra)", service: 0, rent: 0, quote: true },
+      { name: "Sand Bags", service: 0, rent: 0, quote: true },
+      { name: "Wind Screen / Privacy Mesh", service: 0, rent: 0, quote: true },
+      { name: "T-Posts", service: 0, rent: 0, quote: true },
+      { name: "Fence Delivery", service: 0, rent: 0, quote: true },
+      { name: "VIP Trailer - Unit 2", service: 500, rent: 100 },
+      { name: "VIP Trailer - Unit 3", service: 600, rent: 100 },
+      { name: "VIP Trailer - Unit 4", service: 600, rent: 100 },
+      { name: "VIP Trailer - Unit 5", service: 900, rent: 100 },
+      { name: "VIP Trailer - Unit 7", service: 900, rent: 100 },
+      { name: "VIP Trailer - Unit 8", service: 2100, rent: 100 },
+      { name: "VIP Trailer - Unit 9", service: 1700, rent: 100 },
+      { name: "VIP Trailer - Unit 10", service: 1700, rent: 100 },
+      { name: "VIP Trailer - Unit 11", service: 1900, rent: 100 },
+      { name: "VIP Trailer - Unit 12", service: 1400, rent: 100 },
+      { name: "VIP Trailer - Unit 13", service: 1700, rent: 100 }
     ]
   },
   event: {
     items: [
-      { name: "Portable Restroom", price: 85, svc: 5, total: 90 },
-      { name: "Additional Service*", price: 18, svc: 0, total: 18 },
-      { name: "Handicapped Restroom", price: 150, svc: 5, total: 155 },
-      { name: "Handwash Station", price: 160, svc: 5, total: 165 },
-      { name: "HandiStand", price: 125, svc: 5, total: 130 },
-      { name: "HandiStand Refill", price: 13, svc: 0, total: 13 },
-      { name: "Trash Can", price: 15, svc: 0, total: 15 },
-      { name: "Holding Tank", price: 150, svc: 50, total: 200 },
-      { name: "Water Cube w/ Pump", price: 150, svc: 50, total: 200 },
-      { name: "Single-Mount Trailer", price: 200, svc: 50, total: 250 },
-      { name: "Double-Mount Trailer", price: 300, svc: 50, total: 350 },
-      { name: "Flushable Restroom", price: 195, svc: 5, total: 200 },
-      { name: "Whizinator Only", price: 255, svc: 5, total: 260 },
-      { name: "Whizinator Kit (incl. 4 fence panels, mesh, sandbags)", price: 600, svc: 50, total: 650 },
-      { name: "VIP Generator", price: 300, svc: 0, total: 300 },
-      { name: "VIP Water", price: 100, svc: 0, total: 100 },
-      { name: "Chain Link Fence", price: 0, svc: 0, total: 0, quote: true },
-      { name: "Chain Link Gates (Extra)", price: 0, svc: 0, total: 0, quote: true },
-      { name: "Sand Bags", price: 0, svc: 0, total: 0, quote: true },
-      { name: "Wind Screen / Privacy Mesh", price: 0, svc: 0, total: 0, quote: true },
-      { name: "T-Posts", price: 0, svc: 0, total: 0, quote: true },
-      { name: "Fence Delivery", price: 0, svc: 0, total: 0, quote: true },
-      { name: "Barricade Fence", price: 0, svc: 0, total: 0, quote: true },
-      { name: "Gates + Arches", price: 0, svc: 0, total: 0, quote: true },
-      { name: "VIP Trailer - Unit 2", price: 500, svc: 100, total: 600 },
-      { name: "VIP Trailer - Unit 3", price: 600, svc: 100, total: 700 },
-      { name: "VIP Trailer - Unit 4", price: 600, svc: 100, total: 700 },
-      { name: "VIP Trailer - Unit 5", price: 900, svc: 100, total: 1000 },
-      { name: "VIP Trailer - Unit 7", price: 900, svc: 100, total: 1000 },
-      { name: "VIP Trailer - Unit 8", price: 2100, svc: 100, total: 2200 },
-      { name: "VIP Trailer - Unit 9", price: 1700, svc: 100, total: 1800 },
-      { name: "VIP Trailer - Unit 10", price: 1700, svc: 100, total: 1800 },
-      { name: "VIP Trailer - Unit 11", price: 1900, svc: 100, total: 2000 },
-      { name: "VIP Trailer - Unit 12", price: 1400, svc: 100, total: 1500 },
-      { name: "VIP Trailer - Unit 13", price: 1700, svc: 100, total: 1800 },
-      { name: "Delivery", price: 350, svc: 0, total: 350 }
+      // { name, eventPrice, rent (delivery/rental), quote }
+      { name: "Portable Restroom", eventPrice: 85, rent: 5 },
+      { name: "Additional Service*", eventPrice: 18, rent: 0 },
+      { name: "Dispatch Fee", eventPrice: 0, rent: 0, quote: true },
+      { name: "Handicapped Restroom", eventPrice: 150, rent: 5 },
+      { name: "Handwash Station", eventPrice: 160, rent: 5 },
+      { name: "HandiStand", eventPrice: 125, rent: 5 },
+      { name: "HandiStand Refill", eventPrice: 13, rent: 0 },
+      { name: "Trash Can", eventPrice: 15, rent: 0 },
+      { name: "Holding Tank", eventPrice: 150, rent: 50 },
+      { name: "Water Cube w/ Pump", eventPrice: 150, rent: 50 },
+      { name: "Single-Mount Trailer", eventPrice: 200, rent: 50 },
+      { name: "Double-Mount Trailer", eventPrice: 300, rent: 50 },
+      { name: "Flushable Restroom", eventPrice: 195, rent: 5 },
+      { name: "Whizinator Only", eventPrice: 255, rent: 5 },
+      { name: "Whizinator Kit*", eventPrice: 600, rent: 50 },
+      { name: "VIP Generator", eventPrice: 300, rent: 0 },
+      { name: "VIP Water", eventPrice: 100, rent: 0 },
+      { name: "Chain Link Fence", eventPrice: 0, rent: 0, quote: true },
+      { name: "Chain Link Gates (Extra)", eventPrice: 0, rent: 0, quote: true },
+      { name: "Sand Bags", eventPrice: 0, rent: 0, quote: true },
+      { name: "Wind Screen / Privacy Mesh", eventPrice: 0, rent: 0, quote: true },
+      { name: "T-Posts", eventPrice: 0, rent: 0, quote: true },
+      { name: "Fence Delivery", eventPrice: 0, rent: 0, quote: true },
+      { name: "Barricade Fence", eventPrice: 0, rent: 0, quote: true },
+      { name: "Gates + Arches", eventPrice: 0, rent: 0, quote: true },
+      { name: "VIP Trailer - Unit 2", eventPrice: 500, rent: 100 },
+      { name: "VIP Trailer - Unit 3", eventPrice: 600, rent: 100 },
+      { name: "VIP Trailer - Unit 4", eventPrice: 600, rent: 100 },
+      { name: "VIP Trailer - Unit 5", eventPrice: 900, rent: 100 },
+      { name: "VIP Trailer - Unit 7", eventPrice: 900, rent: 100 },
+      { name: "VIP Trailer - Unit 8", eventPrice: 2100, rent: 100 },
+      { name: "VIP Trailer - Unit 9", eventPrice: 1700, rent: 100 },
+      { name: "VIP Trailer - Unit 10", eventPrice: 1700, rent: 100 },
+      { name: "VIP Trailer - Unit 11", eventPrice: 1900, rent: 100 },
+      { name: "VIP Trailer - Unit 12", eventPrice: 1400, rent: 100 },
+      { name: "VIP Trailer - Unit 13", eventPrice: 1700, rent: 100 }
     ]
   }
 };
@@ -632,8 +634,8 @@ function addEquipmentRow() {
     <td data-label="Equipment"><select class="eq-select" onchange="onEquipmentChange(this)">${getEquipmentOptions()}</select></td>
     <td data-label="Qty"><input type="number" class="eq-qty" value="1" min="1" onchange="calcTotals()"></td>
     <td data-label="${freqLabel}"><select class="eq-freq" onchange="calcTotals()">${getFreqOptions()}</select></td>
+    <td data-label="Service" class="row-svc" style="text-align:right;font-size:13px;color:#6b7280">-</td>
     <td data-label="Rent" class="row-rent" style="text-align:right;font-size:13px;color:#6b7280">-</td>
-    <td data-label="Svc Cost" class="row-svc" style="text-align:right;font-size:13px;color:#6b7280">-</td>
     <td data-label="Unit Total" class="row-unit" style="text-align:right;font-size:13px;color:#6b7280">-</td>
     <td data-label="Line Total" class="row-total" style="text-align:right;font-weight:700">$0.00</td>
     <td><button type="button" class="remove-btn" onclick="removeRow(this)">&times;</button></td>
@@ -679,39 +681,42 @@ function calcTotals() {
     const item = items[idx];
 
     if (item.quote) {
-      rentCell.textContent = '-';
       svcCell.textContent = '-';
+      rentCell.textContent = '-';
       unitCell.textContent = 'Quote';
       totalCell.textContent = 'TBD';
       return;
     }
 
-    let rent, svcCost, unitPrice, lineTotal;
+    let serviceCost, rent, unitPrice, lineTotal;
     if (currentMarket === 'construction') {
+      // Total = (service × frequency) + rent
+      serviceCost = item.service * freq;
       rent = item.rent;
-      svcCost = item.svc * freq;
-      unitPrice = item.freq[freq] || 0;
+      unitPrice = serviceCost + rent;
       lineTotal = unitPrice * qty;
     } else {
-      rent = item.price;
-      svcCost = item.svc;
-      unitPrice = item.total;
+      // Total = eventPrice + rent
+      serviceCost = item.eventPrice;
+      rent = item.rent;
+      unitPrice = serviceCost + rent;
       lineTotal = unitPrice * qty;
     }
 
+    svcCell.textContent = '$' + serviceCost.toFixed(2);
     rentCell.textContent = '$' + rent.toFixed(2);
-    svcCell.textContent = '$' + svcCost.toFixed(2);
     unitCell.textContent = '$' + unitPrice.toFixed(2);
     totalCell.textContent = '$' + lineTotal.toFixed(2);
     subtotal += lineTotal;
   });
 
+  const deliveryFee = parseFloat(document.getElementById('deliveryFee').value) || 0;
   const discountPct = parseFloat(document.getElementById('discountPct').value) || 0;
 
   document.getElementById('subtotal').textContent = '$' + subtotal.toFixed(2);
 
   const discountAmt = subtotal * (discountPct / 100);
-  const grand = subtotal - discountAmt;
+  const grand = subtotal - discountAmt + deliveryFee;
 
   document.getElementById('grandTotal').textContent = '$' + grand.toFixed(2);
 }
@@ -767,7 +772,7 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
     equipment: getEquipmentLines(),
     totals: {
       subtotal: document.getElementById('subtotal').textContent,
-      deliveryFee: 'included in line items if applicable',
+      deliveryFee: document.getElementById('deliveryFee').value || '0',
       discount: document.getElementById('discountPct').value,
       grandTotal: document.getElementById('grandTotal').textContent
     },
