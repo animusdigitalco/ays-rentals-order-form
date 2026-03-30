@@ -167,21 +167,19 @@ body {
 
 .card-icons {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   margin-bottom: 20px;
+  align-items: center;
 }
 .card-icon {
-  width: 48px;
-  height: 30px;
-  background: var(--bg);
+  height: 32px;
+  width: auto;
   border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  font-weight: 700;
+}
+.card-icons-label {
+  font-size: 12px;
   color: var(--gray);
-  border: 1px solid #e0e0e0;
+  margin-left: 4px;
 }
 
 /* CARD INPUT STYLING */
@@ -416,10 +414,11 @@ function renderPage() {
       <h2>Payment Details</h2>
 
       <div class="card-icons">
-        <div class="card-icon">VISA</div>
-        <div class="card-icon">MC</div>
-        <div class="card-icon">AMEX</div>
-        <div class="card-icon">DISC</div>
+        <svg class="card-icon" viewBox="0 0 750 471" xmlns="http://www.w3.org/2000/svg"><g fill="none"><rect fill="#0E4595" width="750" height="471" rx="40"/><path d="M278.2 334.2l33.4-195.7h53.4l-33.4 195.7H278.2zm221.3-190.8c-10.6-4-27.2-8.3-47.9-8.3-52.8 0-90 26.6-90.2 64.7-.3 28.2 26.6 43.9 46.9 53.3 20.8 9.6 27.8 15.8 27.7 24.4-.1 13.2-16.6 19.2-32 19.2-21.4 0-32.7-3-50.3-10.2l-6.9-3.1-7.5 43.8c12.5 5.5 35.6 10.2 59.6 10.5 56.2 0 92.6-26.3 93-67.1.2-22.3-14.1-39.3-45-53.3-18.7-9.1-30.2-15.1-30.1-24.3 0-8.1 9.7-16.8 30.7-16.8 17.5-.3 30.2 3.5 40.1 7.5l4.8 2.3 7.3-42.6h-.2zm138-4.9h-41.3c-12.8 0-22.4 3.5-28 16.3l-79.4 179.4h56.2s9.2-24.1 11.2-29.4c6.1 0 60.9.1 68.7.1 1.6 6.9 6.5 29.3 6.5 29.3h49.7l-43.6-195.7zm-65.8 126.4c4.4-11.3 21.4-54.8 21.4-54.8-.3.5 4.4-11.4 7.1-18.8l3.6 17s10.3 47 12.4 56.6h-44.5zM247 138.5l-52.3 133.5-5.6-27.1c-9.7-31.2-39.9-65-73.7-81.9l47.9 171.1 56.6-.1 84.2-195.5H247z" fill="#fff"/><path d="M131.9 138.5H46.5l-.7 3.8c67.1 16.2 111.5 55.4 129.9 102.4L157.4 155c-3.2-12.4-12.6-16-25.5-16.5z" fill="#F2AE14"/></g></svg>
+        <svg class="card-icon" viewBox="0 0 750 471" xmlns="http://www.w3.org/2000/svg"><g fill="none"><rect fill="#fff" width="750" height="471" rx="40"/><rect stroke="#e0e0e0" x="1" y="1" width="748" height="469" rx="39"/><circle fill="#EB001B" cx="301" cy="236" r="118"/><circle fill="#F79E1B" cx="449" cy="236" r="118"/><path d="M375 148.7c30.3 24.2 49.7 61.4 49.7 103.3s-19.4 79.1-49.7 103.3c-30.3-24.2-49.7-61.4-49.7-103.3s19.4-79.1 49.7-103.3z" fill="#FF5F00"/></g></svg>
+        <svg class="card-icon" viewBox="0 0 750 471" xmlns="http://www.w3.org/2000/svg"><g fill="none"><rect fill="#2557D6" width="750" height="471" rx="40"/><path d="M0 235.5h750" stroke="#fff" stroke-width="2"/><path d="M372.8 160.8h4.5L415 310.2h-48.5l-10.6-34.5h-60.5l-10.6 34.5H237l52.7-149.4h29.5l53.6 0zm-22.5 24.3l-22.1 68.4h44.3l-22.2-68.4zm-136.7-24.3l-44 102.2-18.5-102.2h-46.5L60.8 310.2h43l53.4-149.4h56.4zm277.4 0l43.1 149.4h-43.5l-6.5-24.7h-56.6l-6.5 24.7H378l43.2-149.4h69.8zm-33.3 30l-20.1 72.3h40.3L457.7 191zm211.5 119.4h44.8l-39-61.2 37-88.2h-43.5l-15.5 45.4-15.5-45.4h-47l37.8 88.2-39 61.2h46.5l16.7-50.4 16.7 50.4z" fill="#fff"/></g></svg>
+        <svg class="card-icon" viewBox="0 0 750 471" xmlns="http://www.w3.org/2000/svg"><g fill="none"><rect fill="#fff" width="750" height="471" rx="40"/><rect stroke="#e0e0e0" x="1" y="1" width="748" height="469" rx="39"/><circle fill="#F47216" cx="375" cy="215" r="130"/><path d="M233 345c0 0 93 50 284 0" stroke="#F47216" stroke-width="12" fill="none"/><text x="375" y="230" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="72" font-weight="700" fill="#fff">discover</text></g></svg>
+        <span class="card-icons-label">We accept all major cards</span>
       </div>
 
       <form id="paymentForm">
