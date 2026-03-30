@@ -296,6 +296,43 @@ body {
 }
 .footer a { color: var(--brand); text-decoration: none; }
 
+/* STICKY CONTACT BAR */
+.contact-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-dark);
+  color: var(--white);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  z-index: 100;
+  box-shadow: 0 -4px 20px rgba(5,24,41,0.25);
+  font-size: 14px;
+  font-weight: 500;
+}
+.contact-bar span { opacity: 0.7; }
+.contact-bar a {
+  color: var(--brand);
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border: 1.5px solid var(--brand);
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+.contact-bar a:hover {
+  background: var(--brand);
+  color: var(--white);
+}
+body { padding-bottom: 60px; }
+
 @media (max-width: 768px) {
   .page-container {
     grid-template-columns: 1fr;
@@ -321,6 +358,12 @@ body {
 
 <div class="page-container" id="pageContent">
   <!-- Filled by JS from order data -->
+</div>
+
+<div class="contact-bar">
+  <span>Questions?</span>
+  <a href="tel:9182720568">&#9742; (918) 272-0568</a>
+  <a href="mailto:aysteam@aysrentals.com">&#9993; Email Us</a>
 </div>
 
 <div class="footer">
