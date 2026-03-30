@@ -244,6 +244,16 @@ body {
 }
 .remove-btn:hover { color: #da4e4e; }
 
+.view-unit-link {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--brand);
+  text-decoration: none;
+}
+.view-unit-link:hover { text-decoration: underline; }
+
 /* TOTALS */
 .totals-section {
   margin-top: 20px;
@@ -545,7 +555,7 @@ body {
     </div>
   </div>
 
-  <button type="submit" class="submit-btn">Submit Order</button>
+  <button type="submit" class="submit-btn">Proceed to Payment</button>
 </form>
 </div>
 
@@ -562,81 +572,81 @@ body {
 const PRICING = {
   construction: {
     items: [
-      // { name, service (per-service cost), rent (base rental/delivery), noFreq, quote }
-      { name: "Portable Restroom", service: 110, rent: 5 },
+      // { name, service (per-service cost), rent (base rental/delivery), noFreq, quote, url }
+      { name: "Portable Restroom", service: 110, rent: 5, url: "https://www.aysrentals.com/our-services/portable-restrooms" },
       { name: "Off-Route Service*", service: 40, rent: 0, noFreq: true },
       { name: "Dispatch Fee", service: 0, rent: 0, quote: true },
       { name: "Hand Sanitizer (Added Inside RR)", service: 15, rent: 0 },
-      { name: "Handicapped Restroom", service: 220, rent: 5 },
-      { name: "Handwash Station", service: 250, rent: 5 },
-      { name: "HandiStand", service: 125, rent: 5 },
-      { name: "HandiStand Refill", service: 13, rent: 0, noFreq: true },
+      { name: "Handicapped Restroom", service: 220, rent: 5, url: "https://www.aysrentals.com/our-services/portable-restrooms" },
+      { name: "Handwash Station", service: 250, rent: 5, url: "https://www.aysrentals.com/our-services/hand-washing-stations" },
+      { name: "HandiStand", service: 125, rent: 5, url: "https://www.aysrentals.com/our-services/handistand" },
+      { name: "HandiStand Refill", service: 13, rent: 0, noFreq: true, url: "https://www.aysrentals.com/our-services/handistand" },
       { name: "Tip Over Protection Plan (TOPP)**", service: 9, rent: 0, noFreq: true },
       { name: "Trash Can", service: 15, rent: 0, noFreq: true },
-      { name: "Holding Tank", service: 320, rent: 50 },
-      { name: "Water Cube w/ Pump", service: 360, rent: 50 },
-      { name: "High-Rise Unit", service: 140, rent: 5 },
-      { name: "Single-Mount Trailer", service: 200, rent: 50 },
-      { name: "Double-Mount Trailer", service: 300, rent: 50 },
-      { name: "Grey Special Restroom", service: 180, rent: 5 },
-      { name: "Chain Link Fence", service: 0, rent: 0, quote: true },
-      { name: "Chain Link Gates (Extra)", service: 0, rent: 0, quote: true },
-      { name: "Sand Bags", service: 0, rent: 0, quote: true },
-      { name: "Wind Screen / Privacy Mesh", service: 0, rent: 0, quote: true },
-      { name: "T-Posts", service: 0, rent: 0, quote: true },
-      { name: "Fence Delivery", service: 0, rent: 0, quote: true },
-      { name: "VIP Trailer - Unit 2", service: 500, rent: 100 },
-      { name: "VIP Trailer - Unit 3", service: 600, rent: 100 },
-      { name: "VIP Trailer - Unit 4", service: 600, rent: 100 },
-      { name: "VIP Trailer - Unit 5", service: 900, rent: 100 },
-      { name: "VIP Trailer - Unit 7", service: 900, rent: 100 },
-      { name: "VIP Trailer - Unit 8", service: 2100, rent: 100 },
-      { name: "VIP Trailer - Unit 9", service: 1700, rent: 100 },
-      { name: "VIP Trailer - Unit 10", service: 1700, rent: 100 },
-      { name: "VIP Trailer - Unit 11", service: 1900, rent: 100 },
-      { name: "VIP Trailer - Unit 12", service: 1400, rent: 100 },
-      { name: "VIP Trailer - Unit 13", service: 1700, rent: 100 }
+      { name: "Holding Tank", service: 320, rent: 50, url: "https://www.aysrentals.com/our-services/waste-water-tanks" },
+      { name: "Water Cube w/ Pump", service: 360, rent: 50, url: "https://www.aysrentals.com/our-services/fresh-water-cubes" },
+      { name: "High-Rise Unit", service: 140, rent: 5, url: "https://www.aysrentals.com/our-services/portable-restrooms" },
+      { name: "Single-Mount Trailer", service: 200, rent: 50, url: "https://www.aysrentals.com/our-services/trailer-mounted-units" },
+      { name: "Double-Mount Trailer", service: 300, rent: 50, url: "https://www.aysrentals.com/our-services/trailer-mounted-units" },
+      { name: "Grey Special Restroom", service: 180, rent: 5, url: "https://www.aysrentals.com/our-services/portable-restrooms" },
+      { name: "Chain Link Fence", service: 0, rent: 0, quote: true, url: "https://www.aysrentals.com/our-services/temporary-fencing" },
+      { name: "Chain Link Gates (Extra)", service: 0, rent: 0, quote: true, url: "https://www.aysrentals.com/our-services/temporary-fencing" },
+      { name: "Sand Bags", service: 0, rent: 0, quote: true, url: "https://www.aysrentals.com/our-services/temporary-fencing" },
+      { name: "Wind Screen / Privacy Mesh", service: 0, rent: 0, quote: true, url: "https://www.aysrentals.com/our-services/temporary-fencing" },
+      { name: "T-Posts", service: 0, rent: 0, quote: true, url: "https://www.aysrentals.com/our-services/temporary-fencing" },
+      { name: "Fence Delivery", service: 0, rent: 0, quote: true, url: "https://www.aysrentals.com/our-services/temporary-fencing" },
+      { name: "VIP Trailer - Unit 2", service: 500, rent: 100, url: "https://www.aysrentals.com/our-services/luxury-restroom-trailers" },
+      { name: "VIP Trailer - Unit 3", service: 600, rent: 100, url: "https://www.aysrentals.com/our-services/luxury-restroom-trailers" },
+      { name: "VIP Trailer - Unit 4", service: 600, rent: 100, url: "https://www.aysrentals.com/our-services/luxury-restroom-trailers" },
+      { name: "VIP Trailer - Unit 5", service: 900, rent: 100, url: "https://www.aysrentals.com/our-services/luxury-restroom-trailers" },
+      { name: "VIP Trailer - Unit 7", service: 900, rent: 100, url: "https://www.aysrentals.com/our-services/luxury-restroom-trailers" },
+      { name: "VIP Trailer - Unit 8", service: 2100, rent: 100, url: "https://www.aysrentals.com/our-services/luxury-restroom-trailers" },
+      { name: "VIP Trailer - Unit 9", service: 1700, rent: 100, url: "https://www.aysrentals.com/our-services/luxury-restroom-trailers" },
+      { name: "VIP Trailer - Unit 10", service: 1700, rent: 100, url: "https://www.aysrentals.com/our-services/luxury-restroom-trailers" },
+      { name: "VIP Trailer - Unit 11", service: 1900, rent: 100, url: "https://www.aysrentals.com/our-services/luxury-restroom-trailers" },
+      { name: "VIP Trailer - Unit 12", service: 1400, rent: 100, url: "https://www.aysrentals.com/our-services/luxury-restroom-trailers" },
+      { name: "VIP Trailer - Unit 13", service: 1700, rent: 100, url: "https://www.aysrentals.com/our-services/luxury-restroom-trailers" }
     ]
   },
   event: {
     items: [
-      // { name, eventPrice, rent (delivery/rental), quote }
-      { name: "Portable Restroom", eventPrice: 85, rent: 5 },
+      // { name, eventPrice, rent (delivery/rental), quote, url }
+      { name: "Portable Restroom", eventPrice: 85, rent: 5, url: "https://www.aysrentals.com/our-services/portable-restrooms" },
       { name: "Additional Service*", eventPrice: 18, rent: 0 },
       { name: "Dispatch Fee", eventPrice: 0, rent: 0, quote: true },
-      { name: "Handicapped Restroom", eventPrice: 150, rent: 5 },
-      { name: "Handwash Station", eventPrice: 160, rent: 5 },
-      { name: "HandiStand", eventPrice: 125, rent: 5 },
-      { name: "HandiStand Refill", eventPrice: 13, rent: 0 },
+      { name: "Handicapped Restroom", eventPrice: 150, rent: 5, url: "https://www.aysrentals.com/our-services/portable-restrooms" },
+      { name: "Handwash Station", eventPrice: 160, rent: 5, url: "https://www.aysrentals.com/our-services/hand-washing-stations" },
+      { name: "HandiStand", eventPrice: 125, rent: 5, url: "https://www.aysrentals.com/our-services/handistand" },
+      { name: "HandiStand Refill", eventPrice: 13, rent: 0, url: "https://www.aysrentals.com/our-services/handistand" },
       { name: "Trash Can", eventPrice: 15, rent: 0 },
-      { name: "Holding Tank", eventPrice: 150, rent: 50 },
-      { name: "Water Cube w/ Pump", eventPrice: 150, rent: 50 },
-      { name: "Single-Mount Trailer", eventPrice: 200, rent: 50 },
-      { name: "Double-Mount Trailer", eventPrice: 300, rent: 50 },
-      { name: "Flushable Restroom", eventPrice: 195, rent: 5 },
+      { name: "Holding Tank", eventPrice: 150, rent: 50, url: "https://www.aysrentals.com/our-services/waste-water-tanks" },
+      { name: "Water Cube w/ Pump", eventPrice: 150, rent: 50, url: "https://www.aysrentals.com/our-services/fresh-water-cubes" },
+      { name: "Single-Mount Trailer", eventPrice: 200, rent: 50, url: "https://www.aysrentals.com/our-services/trailer-mounted-units" },
+      { name: "Double-Mount Trailer", eventPrice: 300, rent: 50, url: "https://www.aysrentals.com/our-services/trailer-mounted-units" },
+      { name: "Flushable Restroom", eventPrice: 195, rent: 5, url: "https://www.aysrentals.com/our-services/portable-restrooms" },
       { name: "Whizinator Only", eventPrice: 255, rent: 5 },
       { name: "Whizinator Kit*", eventPrice: 600, rent: 50 },
-      { name: "VIP Generator", eventPrice: 300, rent: 0 },
-      { name: "VIP Water", eventPrice: 100, rent: 0 },
-      { name: "Chain Link Fence", eventPrice: 0, rent: 0, quote: true },
-      { name: "Chain Link Gates (Extra)", eventPrice: 0, rent: 0, quote: true },
-      { name: "Sand Bags", eventPrice: 0, rent: 0, quote: true },
-      { name: "Wind Screen / Privacy Mesh", eventPrice: 0, rent: 0, quote: true },
-      { name: "T-Posts", eventPrice: 0, rent: 0, quote: true },
-      { name: "Fence Delivery", eventPrice: 0, rent: 0, quote: true },
-      { name: "Barricade Fence", eventPrice: 0, rent: 0, quote: true },
-      { name: "Gates + Arches", eventPrice: 0, rent: 0, quote: true },
-      { name: "VIP Trailer - Unit 2", eventPrice: 500, rent: 100 },
-      { name: "VIP Trailer - Unit 3", eventPrice: 600, rent: 100 },
-      { name: "VIP Trailer - Unit 4", eventPrice: 600, rent: 100 },
-      { name: "VIP Trailer - Unit 5", eventPrice: 900, rent: 100 },
-      { name: "VIP Trailer - Unit 7", eventPrice: 900, rent: 100 },
-      { name: "VIP Trailer - Unit 8", eventPrice: 2100, rent: 100 },
-      { name: "VIP Trailer - Unit 9", eventPrice: 1700, rent: 100 },
-      { name: "VIP Trailer - Unit 10", eventPrice: 1700, rent: 100 },
-      { name: "VIP Trailer - Unit 11", eventPrice: 1900, rent: 100 },
-      { name: "VIP Trailer - Unit 12", eventPrice: 1400, rent: 100 },
-      { name: "VIP Trailer - Unit 13", eventPrice: 1700, rent: 100 }
+      { name: "VIP Generator", eventPrice: 300, rent: 0, url: "https://www.aysrentals.com/our-services/luxury-restroom-trailers" },
+      { name: "VIP Water", eventPrice: 100, rent: 0, url: "https://www.aysrentals.com/our-services/luxury-restroom-trailers" },
+      { name: "Chain Link Fence", eventPrice: 0, rent: 0, quote: true, url: "https://www.aysrentals.com/our-services/temporary-fencing" },
+      { name: "Chain Link Gates (Extra)", eventPrice: 0, rent: 0, quote: true, url: "https://www.aysrentals.com/our-services/temporary-fencing" },
+      { name: "Sand Bags", eventPrice: 0, rent: 0, quote: true, url: "https://www.aysrentals.com/our-services/temporary-fencing" },
+      { name: "Wind Screen / Privacy Mesh", eventPrice: 0, rent: 0, quote: true, url: "https://www.aysrentals.com/our-services/temporary-fencing" },
+      { name: "T-Posts", eventPrice: 0, rent: 0, quote: true, url: "https://www.aysrentals.com/our-services/temporary-fencing" },
+      { name: "Fence Delivery", eventPrice: 0, rent: 0, quote: true, url: "https://www.aysrentals.com/our-services/temporary-fencing" },
+      { name: "Barricade Fence", eventPrice: 0, rent: 0, quote: true, url: "https://www.aysrentals.com/our-services/temporary-fencing" },
+      { name: "Gates + Arches", eventPrice: 0, rent: 0, quote: true, url: "https://www.aysrentals.com/our-services/temporary-fencing" },
+      { name: "VIP Trailer - Unit 2", eventPrice: 500, rent: 100, url: "https://www.aysrentals.com/our-services/luxury-restroom-trailers" },
+      { name: "VIP Trailer - Unit 3", eventPrice: 600, rent: 100, url: "https://www.aysrentals.com/our-services/luxury-restroom-trailers" },
+      { name: "VIP Trailer - Unit 4", eventPrice: 600, rent: 100, url: "https://www.aysrentals.com/our-services/luxury-restroom-trailers" },
+      { name: "VIP Trailer - Unit 5", eventPrice: 900, rent: 100, url: "https://www.aysrentals.com/our-services/luxury-restroom-trailers" },
+      { name: "VIP Trailer - Unit 7", eventPrice: 900, rent: 100, url: "https://www.aysrentals.com/our-services/luxury-restroom-trailers" },
+      { name: "VIP Trailer - Unit 8", eventPrice: 2100, rent: 100, url: "https://www.aysrentals.com/our-services/luxury-restroom-trailers" },
+      { name: "VIP Trailer - Unit 9", eventPrice: 1700, rent: 100, url: "https://www.aysrentals.com/our-services/luxury-restroom-trailers" },
+      { name: "VIP Trailer - Unit 10", eventPrice: 1700, rent: 100, url: "https://www.aysrentals.com/our-services/luxury-restroom-trailers" },
+      { name: "VIP Trailer - Unit 11", eventPrice: 1900, rent: 100, url: "https://www.aysrentals.com/our-services/luxury-restroom-trailers" },
+      { name: "VIP Trailer - Unit 12", eventPrice: 1400, rent: 100, url: "https://www.aysrentals.com/our-services/luxury-restroom-trailers" },
+      { name: "VIP Trailer - Unit 13", eventPrice: 1700, rent: 100, url: "https://www.aysrentals.com/our-services/luxury-restroom-trailers" }
     ]
   }
 };
@@ -699,6 +709,23 @@ function removeRow(btn) {
 }
 
 function onEquipmentChange(sel) {
+  const row = sel.closest('tr');
+  // Remove existing link if any
+  const existing = row.querySelector('.view-unit-link');
+  if (existing) existing.remove();
+
+  const selVal = sel.value;
+  if (selVal !== '') {
+    const item = PRICING[currentMarket].items[parseInt(selVal)];
+    if (item.url) {
+      const link = document.createElement('a');
+      link.href = item.url;
+      link.target = '_blank';
+      link.className = 'view-unit-link';
+      link.textContent = 'View unit ↗';
+      sel.parentElement.appendChild(link);
+    }
+  }
   calcTotals();
 }
 
@@ -826,8 +853,9 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
     notes: formData.get('notes')
   };
 
-  console.log('Order data ready for API:', orderData);
-  alert('Order submitted! Connect to backend router to process. Check console for data payload.');
+  // Store order data and navigate to payment page
+  sessionStorage.setItem('aysOrderData', JSON.stringify(orderData));
+  window.location.href = 'payment.html';
 });
 
 function getEquipmentLines() {

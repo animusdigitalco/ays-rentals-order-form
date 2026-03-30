@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AYS Rentals | Payment</title>
+<link rel="icon" href="https://cdn.prod.website-files.com/6675dfe514252bcb3ac3eb2b/6709eab9c2f8d93f1f1cd820_Group%2050.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --primary: #193440;
+  --brand: #29a4dc;
+  --bg-dark: #051829;
+  --orange: #db8a2a;
+  --bg: #f3f3f3;
+  --white: #ffffff;
+  --gray: #686868;
+  --body: #333333;
+  --green: #3cc059;
+  --radius: 12px;
+  --shadow: 0 4px 20px rgba(5,24,41,0.10);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--body);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.header {
+  background: var(--bg-dark);
+  color: var(--white);
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header-logo { height: 40px; width: auto; }
+.header-title {
+  font-family: 'Inter', sans-serif;
+  text-align: center;
+  flex: 1;
+}
+.header-title h1 { font-size: 20px; font-weight: 700; letter-spacing: 0.5px; }
+.header-title p { font-size: 13px; opacity: 0.6; margin-top: 2px; }
+.header-right { display: flex; align-items: center; gap: 16px; }
+.header-phone {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--white);
+  text-decoration: none;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+.header-phone:hover { opacity: 1; color: var(--brand); }
+
+.page-container {
+  max-width: 900px;
+  margin: 32px auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 24px;
+  align-items: start;
+}
+
+.card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 32px;
+}
+
+.card h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--bg);
+}
+
+/* ORDER SUMMARY */
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 14px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.summary-line:last-child { border-bottom: none; }
+.summary-line .item-name { color: var(--body); }
+.summary-line .item-detail {
+  font-size: 12px;
+  color: var(--gray);
+}
+.summary-line .item-price { font-weight: 600; white-space: nowrap; }
+
+.summary-subtotal {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  font-size: 14px;
+  color: var(--gray);
+}
+
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 0 0;
+  margin-top: 8px;
+  border-top: 2px solid var(--primary);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--brand);
+}
+
+.customer-summary {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+  font-size: 13px;
+  color: var(--gray);
+  line-height: 1.8;
+}
+.customer-summary strong { color: var(--body); }
+
+/* PAYMENT FORM */
+.form-group {
+  margin-bottom: 16px;
+}
+.form-group label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gray);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 6px;
+}
+.form-group input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--primary);
+  background: var(--white);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.form-group input:focus { border-color: var(--brand); }
+.form-group input::placeholder { color: #c0c0c0; }
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.card-icons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.card-icon {
+  width: 48px;
+  height: 30px;
+  background: var(--bg);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gray);
+  border: 1px solid #e0e0e0;
+}
+
+/* CARD INPUT STYLING */
+.card-number-wrap {
+  position: relative;
+}
+.card-number-wrap .lock-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: var(--green);
+}
+
+.secure-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: #f0faf2;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #2d7a3e;
+}
+.secure-badge .icon { font-size: 18px; }
+
+.pay-btn {
+  display: block;
+  width: 100%;
+  padding: 16px 32px;
+  background: var(--brand);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius);
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(41,164,220,0.3);
+  margin-top: 20px;
+}
+.pay-btn:hover {
+  background: #1e8fc0;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(41,164,220,0.4);
+}
+.pay-btn:disabled {
+  background: #c0c0c0;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.back-link {
+  display: block;
+  text-align: center;
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--gray);
+  text-decoration: none;
+}
+.back-link:hover { color: var(--brand); }
+
+/* TODO PLACEHOLDER */
+.processor-placeholder {
+  margin-top: 20px;
+  padding: 16px;
+  background: #fff8e6;
+  border: 1.5px dashed var(--orange);
+  border-radius: 8px;
+  font-size: 13px;
+  color: #8a6d2b;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.fine-print {
+  font-size: 11px;
+  color: var(--gray);
+  line-height: 1.6;
+  margin-top: 16px;
+  text-align: center;
+}
+
+/* EMPTY STATE */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  grid-column: 1 / -1;
+}
+.empty-state h2 { border: none; padding: 0; margin-bottom: 12px; }
+.empty-state p { color: var(--gray); margin-bottom: 20px; }
+.empty-state a {
+  display: inline-block;
+  padding: 12px 24px;
+  background: var(--brand);
+  color: var(--white);
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.footer {
+  text-align: center;
+  padding: 24px;
+  font-size: 13px;
+  color: var(--gray);
+  max-width: 900px;
+  margin: 0 auto;
+}
+.footer a { color: var(--brand); text-decoration: none; }
+
+@media (max-width: 768px) {
+  .page-container {
+    grid-template-columns: 1fr;
+  }
+  .card { padding: 24px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a href="https://www.aysrentals.com">
+    <img src="https://cdn.prod.website-files.com/6675dfe514252bcb3ac3eb2b/66c610a265799df71b3965a6_Group%2046.svg" alt="AYS Rentals" class="header-logo">
+  </a>
+  <div class="header-title">
+    <h1>Payment</h1>
+    <p>Secure Checkout</p>
+  </div>
+  <div class="header-right">
+    <a href="tel:9182720568" class="header-phone">(918) 272-0568</a>
+  </div>
+</div>
+
+<div class="page-container" id="pageContent">
+  <!-- Filled by JS from order data -->
+</div>
+
+<div class="footer">
+  &copy; 2026 AYS Rentals. All rights reserved. &nbsp;|&nbsp;
+  <a href="mailto:aysteam@aysrentals.com">aysteam@aysrentals.com</a> &nbsp;|&nbsp;
+  <a href="tel:9182720568">(918) 272-0568</a>
+</div>
+
+<script>
+// Read order data from sessionStorage (passed from order form)
+const orderData = JSON.parse(sessionStorage.getItem('aysOrderData') || 'null');
+
+function renderPage() {
+  const container = document.getElementById('pageContent');
+
+  if (!orderData || !orderData.equipment || orderData.equipment.length === 0) {
+    container.innerHTML = `
+      <div class="card empty-state">
+        <h2>No Order Found</h2>
+        <p>It looks like you haven't built an order yet. Head back to the order form to get started.</p>
+        <a href="index.html">Go to Order Form</a>
+      </div>
+    `;
+    return;
+  }
+
+  // Build equipment summary lines
+  const equipLines = orderData.equipment.map(eq => `
+    <div class="summary-line">
+      <div>
+        <div class="item-name">${eq.item}</div>
+        <div class="item-detail">Qty: ${eq.qty}${eq.frequency > 1 ? ' &middot; ' + eq.frequency + 'x/week' : ''}</div>
+      </div>
+      <div class="item-price">${eq.lineTotal}</div>
+    </div>
+  `).join('');
+
+  const subtotal = orderData.totals.subtotal;
+  const delivery = orderData.totals.deliveryFee && orderData.totals.deliveryFee !== '0' ? orderData.totals.deliveryFee : null;
+  const discount = orderData.totals.discount && orderData.totals.discount !== '0' ? orderData.totals.discount : null;
+  const grandTotal = orderData.totals.grandTotal;
+
+  container.innerHTML = `
+    <!-- ORDER SUMMARY (left) -->
+    <div class="card">
+      <h2>Order Summary</h2>
+      ${equipLines}
+
+      <div style="margin-top:12px">
+        <div class="summary-subtotal">
+          <span>Subtotal</span>
+          <span>${subtotal}</span>
+        </div>
+        ${delivery ? `<div class="summary-subtotal"><span>Delivery</span><span>$${parseFloat(delivery).toFixed(2)}</span></div>` : ''}
+        ${discount ? `<div class="summary-subtotal"><span>Discount (${discount}%)</span><span>-</span></div>` : ''}
+        <div class="summary-total">
+          <span>Total Due</span>
+          <span>${grandTotal}</span>
+        </div>
+      </div>
+
+      <div class="customer-summary">
+        <strong>${orderData.customer.company || orderData.customer.contact}</strong><br>
+        ${orderData.customer.contact}<br>
+        ${orderData.customer.email}<br>
+        ${orderData.customer.phone}<br>
+        ${orderData.delivery.date ? 'Delivery: ' + orderData.delivery.date : ''}
+      </div>
+    </div>
+
+    <!-- PAYMENT FORM (right) -->
+    <div class="card">
+      <h2>Payment Details</h2>
+
+      <div class="card-icons">
+        <div class="card-icon">VISA</div>
+        <div class="card-icon">MC</div>
+        <div class="card-icon">AMEX</div>
+        <div class="card-icon">DISC</div>
+      </div>
+
+      <form id="paymentForm">
+        <div class="form-group">
+          <label>Name on Card *</label>
+          <input type="text" id="cardName" placeholder="Full name as shown on card" required>
+        </div>
+
+        <div class="form-group">
+          <label>Card Number *</label>
+          <div class="card-number-wrap">
+            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required inputmode="numeric">
+            <span class="lock-icon">&#128274;</span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Expiration *</label>
+            <input type="text" id="cardExp" placeholder="MM / YY" maxlength="7" required>
+          </div>
+          <div class="form-group">
+            <label>CVV *</label>
+            <input type="text" id="cardCvv" placeholder="123" maxlength="4" required inputmode="numeric">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Billing Zip Code *</label>
+          <input type="text" id="billingZip" placeholder="74055" maxlength="10" required>
+        </div>
+
+        <div class="secure-badge">
+          <span class="icon">&#128274;</span>
+          <span>Your payment info is encrypted and secure</span>
+        </div>
+
+        <!-- TODO: Replace this form with actual payment processor integration -->
+        <!-- Options: Stripe Elements, Square Web Payments SDK, Authorize.net, etc. -->
+        <div class="processor-placeholder">
+          <strong>Payment processor not yet connected.</strong><br>
+          This form is ready to integrate with Stripe, Square, or Authorize.net.
+        </div>
+
+        <button type="submit" class="pay-btn" id="payBtn">
+          Pay ${grandTotal}
+        </button>
+
+        <div class="fine-print">
+          Payment must be made in full prior to mobilization.<br>
+          AYS requires a valid credit card on file. Net 30 from Invoice Date.
+        </div>
+      </form>
+
+      <a href="index.html" class="back-link">&larr; Back to Order Form</a>
+    </div>
+  `;
+
+  // Card number formatting
+  document.getElementById('cardNumber').addEventListener('input', function(e) {
+    let v = e.target.value.replace(/\D/g, '').substring(0, 16);
+    e.target.value = v.replace(/(\d{4})(?=\d)/g, '$1 ');
+  });
+
+  // Expiration formatting
+  document.getElementById('cardExp').addEventListener('input', function(e) {
+    let v = e.target.value.replace(/\D/g, '').substring(0, 4);
+    if (v.length >= 2) v = v.substring(0, 2) + ' / ' + v.substring(2);
+    e.target.value = v;
+  });
+
+  // CVV - numbers only
+  document.getElementById('cardCvv').addEventListener('input', function(e) {
+    e.target.value = e.target.value.replace(/\D/g, '').substring(0, 4);
+  });
+
+  // TODO: Connect to payment processor
+  document.getElementById('paymentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const paymentData = {
+      order: orderData,
+      payment: {
+        name: document.getElementById('cardName').value,
+        // Never log or store raw card data — send directly to processor
+        billingZip: document.getElementById('billingZip').value
+      }
+    };
+
+    console.log('Payment ready for processor:', paymentData);
+    alert('Payment processor not yet connected. Integrate Stripe, Square, or Authorize.net to process payments.');
+  });
+}
+
+renderPage();
+</script>
+</body>
+</html>
