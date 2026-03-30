@@ -448,7 +448,10 @@ function renderPage() {
   }).join('');
 
   const subtotal = orderData.totals.subtotal;
-  const delivery = orderData.totals.deliveryFee && orderData.totals.deliveryFee !== '0' ? orderData.totals.deliveryFee : null;
+  const manualDelivery = parseFloat(orderData.totals.deliveryFee) || 0;
+  const autoDelivery = parseFloat(orderData.totals.deliveryFeeAuto) || 0;
+  const totalDeliveryFee = manualDelivery + autoDelivery;
+  const delivery = totalDeliveryFee > 0 ? totalDeliveryFee : null;
   const discount = orderData.totals.discount && orderData.totals.discount !== '0' ? orderData.totals.discount : null;
   const grandTotal = orderData.totals.grandTotal;
   const isConstruction = orderData.market === 'construction';
@@ -460,7 +463,10 @@ function renderPage() {
       <h2>Order Summary</h2>
       <div style="display:flex;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #eee;font-size:13px;">
         <div><strong style="color:var(--primary)">${marketType}</strong></div>
-        <div style="color:var(--gray)">Delivery: <strong style="color:var(--primary)">${deliveryDate}</strong></div>
+        <div style="color:var(--gray)">Delivery: <strong style="color:var(--primary)">${deliveryDate}</strong>
+          ${orderData.totals.deliveryArea === 'local' ? '<br><span style="font-size:11px">Within 30mi of Tulsa/OKC</span>' : ''}
+          ${orderData.totals.deliveryArea === 'outside' ? '<br><span style="font-size:11px">Outside 30mi of Tulsa/OKC</span>' : ''}
+        </div>
       </div>
       ${equipLines}
 
@@ -469,7 +475,7 @@ function renderPage() {
           <span>Subtotal</span>
           <span>${subtotal}</span>
         </div>
-        ${delivery ? `<div class="summary-subtotal"><span>Delivery</span><span>$${parseFloat(delivery).toFixed(2)}</span></div>` : ''}
+        ${delivery ? `<div class="summary-subtotal"><span>Delivery Fee</span><span>$${totalDeliveryFee.toFixed(2)}</span></div>` : ''}
         ${discount ? `<div class="summary-subtotal"><span>Discount (${discount}%)</span><span>-</span></div>` : ''}
         <div class="summary-total">
           <span>${billingLabel}</span>
