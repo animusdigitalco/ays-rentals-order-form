@@ -511,23 +511,24 @@ body {
         <small>Per-Event Pricing</small>
       </button>
     </div>
-    <div class="form-row">
+    <div class="form-row full">
+      <div class="form-group">
+        <label>Delivery Address *</label>
+        <input type="text" name="deliveryAddress" id="deliveryAddress" placeholder="e.g. 123 Main St, Tulsa, OK 74103" required oninput="debouncedGeocheck()">
+      </div>
+    </div>
+    <div class="form-row full">
       <div class="form-group">
         <label>Estimated Delivery Date *</label>
         <input type="date" name="deliveryDate" id="deliveryDate" required onchange="checkDeliveryDate()">
       </div>
-      <div class="form-group">
-        <label>Delivery Area *</label>
-        <select name="deliveryArea" id="deliveryArea" required onchange="checkDeliveryDate()">
-          <option value="">-- Select --</option>
-          <option value="local">Within 30 miles of Tulsa/OKC</option>
-          <option value="outside">Outside 30 miles</option>
-        </select>
-      </div>
     </div>
+    <div id="distanceInfo" style="font-size:12px;color:var(--gray);margin-top:-8px;margin-bottom:8px;display:none;"></div>
     <div class="delivery-notice" id="deliveryNotice"></div>
     <input type="hidden" name="rentalTerm" id="rentalTerm" value="28-Days">
     <input type="hidden" name="deliveryFeeAuto" id="deliveryFeeAuto" value="0">
+    <input type="hidden" name="deliveryArea" id="deliveryArea" value="">
+    <input type="hidden" name="deliveryDistance" id="deliveryDistance" value="">
   </div>
 
   <!-- EQUIPMENT -->
@@ -984,6 +985,8 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
       deliveryFee: document.getElementById('deliveryFee').value || '0',
       deliveryFeeAuto: document.getElementById('deliveryFeeAuto').value || '0',
       deliveryArea: document.getElementById('deliveryArea').value,
+      deliveryAddress: document.getElementById('deliveryAddress').value,
+      deliveryDistance: document.getElementById('deliveryDistance').value,
       discount: document.getElementById('discountPct').value,
       grandTotal: document.getElementById('grandTotal').textContent
     },
@@ -1021,7 +1024,14 @@ function getEquipmentLines() {
 // Init with one row
 addEquipmentRow();
 
-// ── DELIVERY DATE LOGIC ──
+// ── DELIVERY DATE & DISTANCE LOGIC ──
+
+// AYS locations
+const AYS_LOCATIONS = {
+  tulsa: { lat: 36.1540, lng: -95.9928, name: 'Tulsa' },
+  okc:   { lat: 35.4676, lng: -97.5164, name: 'OKC' }
+};
+
 // Set min date to tomorrow (no same-day or past dates)
 (function() {
   const dateInput = document.getElementById('deliveryDate');
@@ -1029,6 +1039,15 @@ addEquipmentRow();
   tomorrow.setDate(tomorrow.getDate() + 1);
   dateInput.min = tomorrow.toISOString().split('T')[0];
 })();
+
+// Haversine distance in miles
+function haversine(lat1, lng1, lat2, lng2) {
+  const R = 3959;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
 
 function getBusinessDaysUntil(dateStr) {
   const today = new Date();
@@ -1044,13 +1063,85 @@ function getBusinessDaysUntil(dateStr) {
   return count;
 }
 
+// Geocode address via Nominatim (OpenStreetMap)
+let geoCache = {};
+let lastGeoAddress = '';
+async function geocodeAddress(address) {
+  if (geoCache[address]) return geoCache[address];
+  try {
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&countrycodes=us&limit=1`, {
+      headers: { 'Accept': 'application/json' }
+    });
+    const data = await res.json();
+    if (data && data.length > 0) {
+      const result = { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), display: data[0].display_name };
+      geoCache[address] = result;
+      return result;
+    }
+  } catch(e) { console.warn('Geocoding failed:', e); }
+  return null;
+}
+
+// Debounce
+let geoTimer = null;
+function debouncedGeocheck() {
+  clearTimeout(geoTimer);
+  geoTimer = setTimeout(() => checkDeliveryDistance(), 800);
+}
+
+async function checkDeliveryDistance() {
+  const address = document.getElementById('deliveryAddress').value.trim();
+  const distInfo = document.getElementById('distanceInfo');
+
+  if (address.length < 10) {
+    distInfo.style.display = 'none';
+    document.getElementById('deliveryArea').value = '';
+    document.getElementById('deliveryDistance').value = '';
+    checkDeliveryDate();
+    return;
+  }
+
+  if (address === lastGeoAddress) return;
+  lastGeoAddress = address;
+
+  distInfo.style.display = 'block';
+  distInfo.textContent = 'Checking delivery distance...';
+
+  const geo = await geocodeAddress(address);
+  if (!geo) {
+    distInfo.innerHTML = '<span style="color:#b71c1c">Could not verify address. Please enter a full address with city, state, and zip.</span>';
+    document.getElementById('deliveryArea').value = '';
+    document.getElementById('deliveryDistance').value = '';
+    checkDeliveryDate();
+    return;
+  }
+
+  const distTulsa = haversine(geo.lat, geo.lng, AYS_LOCATIONS.tulsa.lat, AYS_LOCATIONS.tulsa.lng);
+  const distOKC = haversine(geo.lat, geo.lng, AYS_LOCATIONS.okc.lat, AYS_LOCATIONS.okc.lng);
+  const nearest = distTulsa < distOKC ? { dist: distTulsa, name: 'Tulsa' } : { dist: distOKC, name: 'OKC' };
+  const miles = Math.round(nearest.dist);
+
+  document.getElementById('deliveryDistance').value = miles;
+
+  if (miles <= 30) {
+    document.getElementById('deliveryArea').value = 'local';
+    distInfo.innerHTML = `&#10003; <strong>${miles} miles</strong> from ${nearest.name} office — within delivery range`;
+    distInfo.style.color = '#2d7a3e';
+  } else {
+    document.getElementById('deliveryArea').value = 'outside';
+    distInfo.innerHTML = `&#9888; <strong>${miles} miles</strong> from ${nearest.name} office — outside standard 30-mile range`;
+    distInfo.style.color = '#b71c1c';
+  }
+
+  checkDeliveryDate();
+}
+
 function checkDeliveryDate() {
   const dateInput = document.getElementById('deliveryDate');
-  const areaSelect = document.getElementById('deliveryArea');
+  const area = document.getElementById('deliveryArea').value;
   const notice = document.getElementById('deliveryNotice');
   const submitBtn = document.querySelector('.submit-btn');
   const dateVal = dateInput.value;
-  const area = areaSelect.value;
 
   // Reset
   notice.className = 'delivery-notice';
@@ -1067,7 +1158,7 @@ function checkDeliveryDate() {
   if (bizDays <= 2 && area === 'outside') {
     notice.className = 'delivery-notice call-required';
     notice.innerHTML = `<strong>Phone Order Required</strong>
-      Orders outside 30 miles of Tulsa/OKC with 1-2 business day delivery must be placed by phone.<br>
+      Express delivery outside 30 miles of Tulsa/OKC must be placed by phone.<br>
       Please call <a href="tel:9182720568" style="color:inherit;font-weight:700">(918) 272-0568</a> to complete your order.`;
     notice.style.display = 'block';
     submitBtn.disabled = true;
@@ -1078,10 +1169,19 @@ function checkDeliveryDate() {
   if (bizDays <= 2 && area === 'local') {
     notice.className = 'delivery-notice express';
     notice.innerHTML = `<strong>Express Delivery — $75.00 fee</strong>
-      1-2 business day delivery within 30 miles of Tulsa/OKC includes a $75.00 delivery fee.`;
+      1-2 business day delivery within 30 miles includes a $75.00 delivery fee.`;
     notice.style.display = 'block';
     document.getElementById('deliveryFeeAuto').value = '75';
     calcTotals();
+    return;
+  }
+
+  // 1-2 business days but address not checked yet
+  if (bizDays <= 2 && !area) {
+    notice.className = 'delivery-notice express';
+    notice.innerHTML = `<strong>Express Delivery</strong>
+      Enter your delivery address above so we can verify your delivery area.`;
+    notice.style.display = 'block';
     return;
   }
 
@@ -1093,15 +1193,6 @@ function checkDeliveryDate() {
     notice.style.display = 'block';
     document.getElementById('deliveryFeeAuto').value = '25';
     calcTotals();
-    return;
-  }
-
-  // 1-2 business days but no area selected yet
-  if (bizDays <= 2 && !area) {
-    notice.className = 'delivery-notice express';
-    notice.innerHTML = `<strong>Express Delivery Selected</strong>
-      Please select your delivery area to see pricing.`;
-    notice.style.display = 'block';
     return;
   }
 

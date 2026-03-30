@@ -464,8 +464,7 @@ function renderPage() {
       <div style="display:flex;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #eee;font-size:13px;">
         <div><strong style="color:var(--primary)">${marketType}</strong></div>
         <div style="color:var(--gray)">Delivery: <strong style="color:var(--primary)">${deliveryDate}</strong>
-          ${orderData.totals.deliveryArea === 'local' ? '<br><span style="font-size:11px">Within 30mi of Tulsa/OKC</span>' : ''}
-          ${orderData.totals.deliveryArea === 'outside' ? '<br><span style="font-size:11px">Outside 30mi of Tulsa/OKC</span>' : ''}
+          ${orderData.totals.deliveryDistance ? '<br><span style="font-size:11px">' + orderData.totals.deliveryDistance + ' miles from nearest office</span>' : ''}
         </div>
       </div>
       ${equipLines}
