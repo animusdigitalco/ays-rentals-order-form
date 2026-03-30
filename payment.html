@@ -349,16 +349,31 @@ function renderPage() {
     return;
   }
 
-  // Build equipment summary lines
-  const equipLines = orderData.equipment.map(eq => `
-    <div class="summary-line">
-      <div>
-        <div class="item-name">${eq.item}</div>
-        <div class="item-detail">Qty: ${eq.qty}${eq.frequency > 1 ? ' &middot; ' + eq.frequency + 'x/week' : ''}</div>
+  // Format delivery date
+  const marketType = orderData.market === 'construction' ? 'Construction (28-Day Cycle)' : 'Special Event';
+  const deliveryDate = orderData.delivery.date
+    ? new Date(orderData.delivery.date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })
+    : 'TBD';
+
+  // Build equipment summary lines with cleaning details
+  const equipLines = orderData.equipment.map(eq => {
+    const freqLabel = orderData.market === 'construction'
+      ? eq.frequency + 'x cleaning/week'
+      : '1 service';
+    return `
+      <div class="summary-line">
+        <div>
+          <div class="item-name">${eq.item}</div>
+          <div class="item-detail">
+            Qty: ${eq.qty} &middot; ${freqLabel}
+            ${eq.serviceCost && eq.serviceCost !== '-' ? ' &middot; Svc: ' + eq.serviceCost : ''}
+            ${eq.rent && eq.rent !== '-' && eq.rent !== '$0.00' ? ' &middot; Rent: ' + eq.rent : ''}
+          </div>
+        </div>
+        <div class="item-price">${eq.lineTotal}</div>
       </div>
-      <div class="item-price">${eq.lineTotal}</div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 
   const subtotal = orderData.totals.subtotal;
   const delivery = orderData.totals.deliveryFee && orderData.totals.deliveryFee !== '0' ? orderData.totals.deliveryFee : null;
@@ -369,6 +384,10 @@ function renderPage() {
     <!-- ORDER SUMMARY (left) -->
     <div class="card">
       <h2>Order Summary</h2>
+      <div style="display:flex;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #eee;font-size:13px;">
+        <div><strong style="color:var(--primary)">${marketType}</strong></div>
+        <div style="color:var(--gray)">Delivery: <strong style="color:var(--primary)">${deliveryDate}</strong></div>
+      </div>
       ${equipLines}
 
       <div style="margin-top:12px">
@@ -388,8 +407,7 @@ function renderPage() {
         <strong>${orderData.customer.company || orderData.customer.contact}</strong><br>
         ${orderData.customer.contact}<br>
         ${orderData.customer.email}<br>
-        ${orderData.customer.phone}<br>
-        ${orderData.delivery.date ? 'Delivery: ' + orderData.delivery.date : ''}
+        ${orderData.customer.phone}
       </div>
     </div>
 

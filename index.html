@@ -866,10 +866,15 @@ function getEquipmentLines() {
     if (selVal === '') return;
     const idx = parseInt(selVal);
     const items = PRICING[currentMarket].items;
+    const freq = parseInt(row.querySelector('.eq-freq').value) || 1;
+    const qty = parseInt(row.querySelector('.eq-qty').value) || 0;
     lines.push({
       item: items[idx].name,
-      qty: parseInt(row.querySelector('.eq-qty').value) || 0,
-      frequency: parseInt(row.querySelector('.eq-freq').value) || 1,
+      qty: qty,
+      frequency: freq,
+      serviceCost: row.querySelector('.row-svc').textContent,
+      rent: row.querySelector('.row-rent').textContent,
+      unitTotal: row.querySelector('.row-unit').textContent,
       lineTotal: row.querySelector('.row-total').textContent
     });
   });
